@@ -4,13 +4,18 @@
   "description": "Demo site for dmd",
   "main": "index.js",
   "scripts": {
+    "sass": "baldrick --do 'sassc assets/style.scss assets/style.css -m' --when assets/style.scss --change"
   },
   "repository": "https://github.com/75lb/dmd.git",
   "homepage": "https://github.com/75lb/dmd",
   "dependencies": {
     "brfs": "^1.2.0",
     "dmd": "^0.2.7",
-    "file-set": "^0.2.1"
+    "file-set": "^0.2.1",
+    "function-tools": "^0.1.1",
+    "marked": "^0.3.2"
   },
-  "local-web-server": { "port": 8070 }
+  "local-web-server": {
+    "port": 8070
+  }
 }

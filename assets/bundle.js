@@ -1,25 +1,45 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/app.js":[function(require,module,exports){
 var dmd = require("dmd");
 
+var f = require("function-tools");
+var partials = require("./partials.json");
+var marked = require("marked");
+
 var $ = document.querySelector.bind(document);
+var $template = $("#template");
+var $markdown = $("#markdown");
+var $html = $("#html");
 
 var data = "[\n  {\n    \"description\": \"Called when an async operation completes\",\n    \"kind\": \"typedef\",\n    \"name\": \"onComplete\",\n    \"type\": {\n      \"names\": [\n        \"function\"\n      ]\n    },\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"description\": \"an error, or `null`\",\n        \"name\": \"err\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"the result info\",\n        \"name\": \"result\"\n      }\n    ],\n    \"longname\": \"onComplete\",\n    \"scope\": \"global\"\n  },\n  {\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"the filename\",\n        \"name\": \"filename\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"onComplete\"\n          ]\n        },\n        \"description\": \"the callback\",\n        \"name\": \"done\"\n      }\n    ],\n    \"name\": \"read\",\n    \"longname\": \"read\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"read\"\n  },\n  {\n    \"description\": \"the constructor description\",\n    \"kind\": \"class\",\n    \"classdesc\": \"a class with all of the things\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"description\": \"an input\",\n        \"name\": \"input\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"optional\": true,\n        \"description\": \"optional shit\",\n        \"name\": \"options\"\n      }\n    ],\n    \"author\": [\n      \"75lb <75pound@gmail.com>\"\n    ],\n    \"deprecated\": true,\n    \"since\": \"v0.10.28\",\n    \"augments\": [\n      \"Number\"\n    ],\n    \"examples\": [\n      \"```js\\nvar yeah = new Everything(true);\\n```\"\n    ],\n    \"name\": \"All\",\n    \"longname\": \"All\",\n    \"scope\": \"global\",\n    \"codeName\": \"All\"\n  },\n  {\n    \"description\": \"the ingredients on top\",\n    \"defaultvalue\": \"mud, lettuce\",\n    \"type\": {\n      \"names\": [\n        \"string\"\n      ]\n    },\n    \"since\": \"v1.0.0\",\n    \"name\": \"topping\",\n    \"longname\": \"All#topping\",\n    \"kind\": \"member\",\n    \"memberof\": \"All\",\n    \"scope\": \"instance\",\n    \"codeName\": \"this.topping\"\n  },\n  {\n    \"description\": \"the general size\",\n    \"name\": \"size\",\n    \"longname\": \"All#size\",\n    \"kind\": \"member\",\n    \"memberof\": \"All\",\n    \"scope\": \"instance\",\n    \"codeName\": \"this.size\"\n  },\n  {\n    \"description\": \"This function has all tags set\",\n    \"deprecated\": true,\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"The input string\",\n        \"name\": \"one\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"description\": \"a second input\",\n        \"name\": \"two\"\n      }\n    ],\n    \"author\": [\n      \"Lloyd <75pound@gmail.com>\"\n    ],\n    \"since\": \"v0.10.28\",\n    \"returns\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"object\",\n            \"string\"\n          ]\n        },\n        \"description\": \"this return has several types\"\n      }\n    ],\n    \"examples\": [\n      \"```js\\nall.allTogether(true);\\n```\"\n    ],\n    \"name\": \"allThings\",\n    \"longname\": \"All#allThings\",\n    \"kind\": \"function\",\n    \"memberof\": \"All\",\n    \"scope\": \"instance\",\n    \"codeName\": \"All.prototype.allThings\"\n  },\n  {\n    \"description\": \"a rarseclart inner\",\n    \"name\": \"some\",\n    \"longname\": \"All#allThings~some\",\n    \"kind\": \"member\",\n    \"memberof\": \"All#allThings\",\n    \"scope\": \"inner\",\n    \"codeName\": \"some\"\n  },\n  {\n    \"description\": \"a constructor description\",\n    \"kind\": \"class\",\n    \"classdesc\": \"simple class description\",\n    \"augments\": [\n      \"Object\"\n    ],\n    \"name\": \"Person\",\n    \"longname\": \"Person\",\n    \"scope\": \"global\",\n    \"codeName\": \"Person\"\n  },\n  {\n    \"description\": \"a constructor with args\",\n    \"kind\": \"class\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"optional\": true,\n        \"description\": \"optional shit\",\n        \"name\": \"options\"\n      }\n    ],\n    \"name\": \"Car\",\n    \"longname\": \"Car\",\n    \"scope\": \"global\",\n    \"codeName\": \"Car\"\n  },\n  {\n    \"kind\": \"class\",\n    \"classdesc\": \"a class which extends\",\n    \"augments\": [\n      \"Pipe\"\n    ],\n    \"name\": \"Pipe\",\n    \"longname\": \"Pipe\",\n    \"scope\": \"global\",\n    \"codeName\": \"Pipe\"\n  },\n  {\n    \"description\": \"the constructor description\",\n    \"kind\": \"class\",\n    \"classdesc\": \"a class with all trimmings\",\n    \"augments\": [\n      \"Pipe\"\n    ],\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"description\": \"an input\",\n        \"name\": \"input\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"optional\": true,\n        \"description\": \"optional shit\",\n        \"name\": \"options\"\n      }\n    ],\n    \"author\": [\n      \"75lb <75pound@gmail.com>\"\n    ],\n    \"deprecated\": true,\n    \"since\": \"v0.10.28\",\n    \"examples\": [\n      \"```js\\nvar yeah = new Everything(true);\\n```\"\n    ],\n    \"name\": \"Everything\",\n    \"longname\": \"Everything\",\n    \"scope\": \"global\",\n    \"codeName\": \"Everything\"\n  },\n  {\n    \"description\": \"Fired when rice is ready\",\n    \"kind\": \"event\",\n    \"name\": \"cooked\",\n    \"memberof\": \"Rice\",\n    \"longname\": \"Rice#event:cooked\",\n    \"scope\": \"instance\"\n  },\n  {\n    \"description\": \"Fired when rice is cooking\",\n    \"kind\": \"event\",\n    \"name\": \"cooking\",\n    \"memberof\": \"Rice\",\n    \"longname\": \"Rice#event:cooking\",\n    \"scope\": \"instance\"\n  },\n  {\n    \"kind\": \"class\",\n    \"name\": \"Rice\",\n    \"longname\": \"Rice\",\n    \"scope\": \"global\",\n    \"codeName\": \"Rice\"\n  },\n  {\n    \"kind\": \"class\",\n    \"name\": \"Something\",\n    \"longname\": \"Something\",\n    \"scope\": \"global\",\n    \"codeName\": \"Something\"\n  },\n  {\n    \"description\": \"method description\",\n    \"name\": \"methodOne\",\n    \"longname\": \"Something#methodOne\",\n    \"kind\": \"function\",\n    \"memberof\": \"Something\",\n    \"scope\": \"instance\",\n    \"codeName\": \"Something.prototype.methodOne\"\n  },\n  {\n    \"description\": \"This function has all tags set\",\n    \"deprecated\": true,\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"The input string\",\n        \"name\": \"one\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"description\": \"a second input\",\n        \"name\": \"two\"\n      }\n    ],\n    \"author\": [\n      \"Lloyd <75pound@gmail.com>\"\n    ],\n    \"since\": \"v0.10.28\",\n    \"returns\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"object\",\n            \"string\"\n          ]\n        },\n        \"description\": \"this return has several types\"\n      }\n    ],\n    \"examples\": [\n      \"```js\\nsomething.allTogether(true);\\n```\"\n    ],\n    \"name\": \"allTogether\",\n    \"longname\": \"Something#allTogether\",\n    \"kind\": \"function\",\n    \"memberof\": \"Something\",\n    \"scope\": \"instance\",\n    \"codeName\": \"Something.prototype.allTogether\"\n  },\n  {\n    \"kind\": \"class\",\n    \"name\": \"Pizza\",\n    \"longname\": \"Pizza\",\n    \"scope\": \"global\",\n    \"codeName\": \"Pizza\"\n  },\n  {\n    \"description\": \"the ingredients on top\",\n    \"defaultvalue\": \"mud, lettuce\",\n    \"type\": {\n      \"names\": [\n        \"string\"\n      ]\n    },\n    \"since\": \"v1.0.0\",\n    \"name\": \"topping\",\n    \"longname\": \"Pizza#topping\",\n    \"kind\": \"member\",\n    \"memberof\": \"Pizza\",\n    \"scope\": \"instance\",\n    \"codeName\": \"this.topping\"\n  },\n  {\n    \"description\": \"the general size\",\n    \"name\": \"size\",\n    \"longname\": \"Pizza#size\",\n    \"kind\": \"member\",\n    \"memberof\": \"Pizza\",\n    \"scope\": \"instance\",\n    \"codeName\": \"this.size\"\n  },\n  {\n    \"description\": \"the first important constant\",\n    \"kind\": \"constant\",\n    \"type\": {\n      \"names\": [\n        \"number\"\n      ]\n    },\n    \"name\": \"CONST_ONE\",\n    \"longname\": \"CONST_ONE\",\n    \"scope\": \"global\",\n    \"codeName\": \"CONST_ONE\"\n  },\n  {\n    \"description\": \"This variable has all tags set\",\n    \"deprecated\": true,\n    \"kind\": \"constant\",\n    \"type\": {\n      \"names\": [\n        \"boolean\"\n      ]\n    },\n    \"readonly\": true,\n    \"author\": [\n      \"Lloyd Brookes <lloyd@brookes.com>\"\n    ],\n    \"since\": \"v0.10.28\",\n    \"examples\": [\n      \"```js\\nvar CONST_TWO = true;\\n```\"\n    ],\n    \"name\": \"CONST_TWO\",\n    \"longname\": \"CONST_TWO\",\n    \"scope\": \"global\",\n    \"codeName\": \"CONST_TWO\"\n  },\n  {\n    \"description\": \"this function has a wonderful custom tag\",\n    \"tags\": [\n      {\n        \"originalTitle\": \"createdIn\",\n        \"title\": \"createdin\",\n        \"text\": \"Nigeria\",\n        \"value\": \"Nigeria\"\n      }\n    ],\n    \"name\": \"customTaggedFunction\",\n    \"longname\": \"customTaggedFunction\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"customTaggedFunction\"\n  },\n  {\n    \"description\": \"Enum for the `type` value\",\n    \"readonly\": true,\n    \"kind\": \"member\",\n    \"isEnum\": true,\n    \"type\": {\n      \"names\": [\n        \"number\"\n      ]\n    },\n    \"name\": \"eFileType\",\n    \"longname\": \"eFileType\",\n    \"scope\": \"global\",\n    \"properties\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"number\"\n          ]\n        },\n        \"longname\": \"eFileType.NOEXIST\",\n        \"name\": \"NOEXIST\",\n        \"defaultvalue\": \"0\",\n        \"memberof\": \"eFileType\",\n        \"kind\": \"member\",\n        \"scope\": \"static\",\n        \"codeName\": \"NOEXIST\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"number\"\n          ]\n        },\n        \"longname\": \"eFileType.FILE\",\n        \"name\": \"FILE\",\n        \"defaultvalue\": \"1\",\n        \"memberof\": \"eFileType\",\n        \"kind\": \"member\",\n        \"scope\": \"static\",\n        \"codeName\": \"FILE\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"number\"\n          ]\n        },\n        \"longname\": \"eFileType.DIR\",\n        \"name\": \"DIR\",\n        \"defaultvalue\": \"2\",\n        \"memberof\": \"eFileType\",\n        \"kind\": \"member\",\n        \"scope\": \"static\",\n        \"codeName\": \"DIR\"\n      }\n    ],\n    \"codeName\": \"eFileType\"\n  },\n  {\n    \"name\": \"NOEXIST\",\n    \"longname\": \"eFileType.NOEXIST\",\n    \"kind\": \"member\",\n    \"memberof\": \"eFileType\",\n    \"scope\": \"static\",\n    \"type\": {\n      \"names\": [\n        \"number\"\n      ]\n    },\n    \"defaultvalue\": \"0\",\n    \"codeName\": \"NOEXIST\"\n  },\n  {\n    \"name\": \"FILE\",\n    \"longname\": \"eFileType.FILE\",\n    \"kind\": \"member\",\n    \"memberof\": \"eFileType\",\n    \"scope\": \"static\",\n    \"type\": {\n      \"names\": [\n        \"number\"\n      ]\n    },\n    \"defaultvalue\": \"1\",\n    \"codeName\": \"FILE\"\n  },\n  {\n    \"name\": \"DIR\",\n    \"longname\": \"eFileType.DIR\",\n    \"kind\": \"member\",\n    \"memberof\": \"eFileType\",\n    \"scope\": \"static\",\n    \"type\": {\n      \"names\": [\n        \"number\"\n      ]\n    },\n    \"defaultvalue\": \"2\",\n    \"codeName\": \"DIR\"\n  },\n  {\n    \"description\": \"a global function\",\n    \"name\": \"globalFunc\",\n    \"longname\": \"globalFunc\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"globalFunc\"\n  },\n  {\n    \"description\": \"a function with an example\",\n    \"examples\": [\n      \"```js\\nvar result = exampled();\\n```\"\n    ],\n    \"name\": \"exampled\",\n    \"longname\": \"exampled\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"exampled\"\n  },\n  {\n    \"description\": \"a function with multiple examples\",\n    \"examples\": [\n      \"```js\\nvar another = 100;\\n```\",\n      \"```js\\nvar next = \\\"p\\\";\\n```\"\n    ],\n    \"name\": \"multiExampled\",\n    \"longname\": \"multiExampled\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"multiExampled\"\n  },\n  {\n    \"access\": \"protected\",\n    \"name\": \"_protected\",\n    \"longname\": \"_protected\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"_protected\"\n  },\n  {\n    \"author\": [\n      \"Clive Jones <clive@jones.com>\"\n    ],\n    \"name\": \"withAuthor\",\n    \"longname\": \"withAuthor\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"withAuthor\"\n  },\n  {\n    \"deprecated\": true,\n    \"name\": \"oldFunction\",\n    \"longname\": \"oldFunction\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"oldFunction\"\n  },\n  {\n    \"since\": \"v0.10.28\",\n    \"name\": \"newFunction\",\n    \"longname\": \"newFunction\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"newFunction\"\n  },\n  {\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"The input string\",\n        \"name\": \"one\"\n      }\n    ],\n    \"name\": \"withParam\",\n    \"longname\": \"withParam\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"withParam\"\n  },\n  {\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"The input string\",\n        \"name\": \"one\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"name\": \"two\"\n      }\n    ],\n    \"name\": \"withParams\",\n    \"longname\": \"withParams\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"withParams\"\n  },\n  {\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"The input string\",\n        \"name\": \"one\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"optional\": true,\n        \"description\": \"this one is optional\",\n        \"name\": \"two\"\n      }\n    ],\n    \"name\": \"withOptional\",\n    \"longname\": \"withOptional\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"withOptional\"\n  },\n  {\n    \"description\": \"this description has \\n\\n- bullet\\n- points\\n\\nand needs this line to separate the above list from the below\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"The input string\",\n        \"name\": \"one\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"description\": \"a second input\",\n        \"name\": \"two\"\n      }\n    ],\n    \"name\": \"withBullets\",\n    \"longname\": \"withBullets\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"withBullets\"\n  },\n  {\n    \"returns\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        }\n      }\n    ],\n    \"name\": \"returnsSomething\",\n    \"longname\": \"returnsSomething\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"returnsSomething\"\n  },\n  {\n    \"returns\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"description\": \"this return has a description\"\n      }\n    ],\n    \"name\": \"returnsSomethingDesc\",\n    \"longname\": \"returnsSomethingDesc\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"returnsSomethingDesc\"\n  },\n  {\n    \"returns\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"object\",\n            \"string\"\n          ]\n        },\n        \"description\": \"this return has several types\"\n      }\n    ],\n    \"name\": \"returnsSeveral\",\n    \"longname\": \"returnsSeveral\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"returnsSeveral\"\n  },\n  {\n    \"description\": \"This function has all tags set\",\n    \"deprecated\": true,\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"The input string\",\n        \"name\": \"one\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"description\": \"a second input\",\n        \"name\": \"two\"\n      }\n    ],\n    \"author\": [\n      \"Lloyd <75pound@gmail.com>\"\n    ],\n    \"since\": \"v0.10.28\",\n    \"returns\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"object\",\n            \"string\"\n          ]\n        },\n        \"description\": \"this return has several types\"\n      }\n    ],\n    \"examples\": [\n      \"```js\\nallTogether(true);\\n```\"\n    ],\n    \"name\": \"allTogether\",\n    \"longname\": \"allTogether\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"allTogether\"\n  },\n  {\n    \"description\": \"a visible global\",\n    \"name\": \"visible\",\n    \"longname\": \"visible\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"visible\"\n  },\n  {\n    \"description\": \"A module. Refer to it using {@link module:foo/bar}.\",\n    \"kind\": \"module\",\n    \"name\": \"foo/bar\",\n    \"longname\": \"module:foo/bar\"\n  },\n  {\n    \"description\": \"The built in string object. Refer to it with {@link external:String}.\",\n    \"kind\": \"external\",\n    \"name\": \"String\",\n    \"longname\": \"external:String\",\n    \"scope\": \"inner\",\n    \"memberof\": \"module:foo/bar\"\n  },\n  {\n    \"description\": \"An event. Refer to with {@link module:foo/bar.event:MyEvent}.\",\n    \"kind\": \"event\",\n    \"name\": \"event:MyEvent\",\n    \"memberof\": \"module:foo/bar\",\n    \"longname\": \"module:foo/bar.event:MyEvent\",\n    \"scope\": \"static\"\n  },\n  {\n    \"description\": \"See {@link LinkClass} and [LinkClass's foo property]{@link LinkClass#foo}.\\nAlso check out {@link http://www.google.com|Google} and {@link http://github.com GitHub}.\",\n    \"name\": \"linkFunction\",\n    \"longname\": \"module:foo/bar~linkFunction\",\n    \"kind\": \"function\",\n    \"scope\": \"inner\",\n    \"memberof\": \"module:foo/bar\",\n    \"codeName\": \"linkFunction\"\n  },\n  {\n    \"description\": \"A class.\",\n    \"kind\": \"class\",\n    \"name\": \"LinkClass\",\n    \"longname\": \"module:foo/bar~LinkClass\",\n    \"scope\": \"inner\",\n    \"memberof\": \"module:foo/bar\",\n    \"codeName\": \"LinkClass\"\n  },\n  {\n    \"description\": \"foo property\",\n    \"name\": \"foo\",\n    \"longname\": \"module:foo/bar~LinkClass#foo\",\n    \"kind\": \"member\",\n    \"memberof\": \"module:foo/bar~LinkClass\",\n    \"scope\": \"instance\",\n    \"codeName\": \"this.foo\"\n  },\n  {\n    \"description\": \"a global variable\",\n    \"name\": \"variable\",\n    \"longname\": \"variable\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"variable\"\n  },\n  {\n    \"type\": {\n      \"names\": [\n        \"string\"\n      ]\n    },\n    \"name\": \"typed\",\n    \"longname\": \"typed\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"typed\"\n  },\n  {\n    \"type\": {\n      \"names\": [\n        \"string\",\n        \"number\"\n      ]\n    },\n    \"name\": \"types\",\n    \"longname\": \"types\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"types\"\n  },\n  {\n    \"description\": \"a var with an example\",\n    \"examples\": [\n      \"```js\\nvar another = 100;\\n```\"\n    ],\n    \"name\": \"exampled\",\n    \"longname\": \"exampled\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"exampled\"\n  },\n  {\n    \"description\": \"a var with multiple examples\",\n    \"examples\": [\n      \"```js\\nvar another = 100;\\n```\",\n      \"```js\\nvar next = \\\"p\\\";\\n```\"\n    ],\n    \"name\": \"examples\",\n    \"longname\": \"examples\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"examples\"\n  },\n  {\n    \"access\": \"protected\",\n    \"name\": \"_protected\",\n    \"longname\": \"_protected\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"_protected\"\n  },\n  {\n    \"author\": [\n      \"Clive Jones <clive@jones.com>\"\n    ],\n    \"name\": \"withAuthor\",\n    \"longname\": \"withAuthor\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"withAuthor\"\n  },\n  {\n    \"defaultvalue\": \"23\",\n    \"name\": \"hasDefault\",\n    \"longname\": \"hasDefault\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"hasDefault\"\n  },\n  {\n    \"defaultvalue\": \"{\\\"one\\\":1,\\\"two\\\":2}\",\n    \"defaultvaluetype\": \"object\",\n    \"name\": \"hasDefaultObject\",\n    \"longname\": \"hasDefaultObject\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"hasDefaultObject\"\n  },\n  {\n    \"deprecated\": true,\n    \"name\": \"deprecated\",\n    \"longname\": \"deprecated\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"deprecated\"\n  },\n  {\n    \"readonly\": true,\n    \"name\": \"readOnly\",\n    \"longname\": \"readOnly\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"readOnly\"\n  },\n  {\n    \"since\": \"v0.10.28\",\n    \"name\": \"hasSince\",\n    \"longname\": \"hasSince\",\n    \"kind\": \"member\",\n    \"scope\": \"global\",\n    \"codeName\": \"hasSince\"\n  },\n  {\n    \"kind\": \"namespace\",\n    \"name\": \"car\",\n    \"longname\": \"car\",\n    \"scope\": \"global\",\n    \"codeName\": \"car\"\n  },\n  {\n    \"description\": \"the round things\",\n    \"name\": \"wheels\",\n    \"longname\": \"car.wheels\",\n    \"kind\": \"member\",\n    \"memberof\": \"car\",\n    \"scope\": \"static\",\n    \"codeName\": \"wheels\"\n  },\n  {\n    \"description\": \"the electronics that always go wrong\",\n    \"name\": \"sensors\",\n    \"longname\": \"car.sensors\",\n    \"kind\": \"member\",\n    \"memberof\": \"car\",\n    \"scope\": \"static\",\n    \"codeName\": \"sensors\"\n  },\n  {\n    \"description\": \"start the car\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        }\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"function\"\n          ]\n        }\n      }\n    ],\n    \"name\": \"start\",\n    \"longname\": \"car.start\",\n    \"kind\": \"function\",\n    \"memberof\": \"car\",\n    \"scope\": \"static\",\n    \"codeName\": \"start\"\n  },\n  {\n    \"description\": \"decribes the current conditions\",\n    \"kind\": \"namespace\",\n    \"name\": \"env\",\n    \"longname\": \"car#env\",\n    \"memberof\": \"car\",\n    \"scope\": \"instance\",\n    \"codeName\": \"this.env\"\n  },\n  {\n    \"description\": \"what kind of day is it\",\n    \"type\": {\n      \"names\": [\n        \"string\"\n      ]\n    },\n    \"defaultvalue\": \"choppy\",\n    \"name\": \"weather\",\n    \"longname\": \"car#env.weather\",\n    \"kind\": \"member\",\n    \"memberof\": \"car#env\",\n    \"scope\": \"static\",\n    \"codeName\": \"weather\"\n  },\n  {\n    \"description\": \"road condition\",\n    \"type\": {\n      \"names\": [\n        \"string\"\n      ]\n    },\n    \"defaultvalue\": \"wet\",\n    \"name\": \"roads\",\n    \"longname\": \"car#env.roads\",\n    \"kind\": \"member\",\n    \"memberof\": \"car#env\",\n    \"scope\": \"static\",\n    \"codeName\": \"roads\"\n  },\n  {\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"description\": \"the function options\",\n        \"name\": \"options\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"first option\",\n        \"name\": \"options.one\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"second option\",\n        \"name\": \"options.two\"\n      }\n    ],\n    \"name\": \"doSomething\",\n    \"longname\": \"doSomething\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"doSomething\"\n  },\n  {\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"Object\"\n          ]\n        },\n        \"description\": \"the function options\",\n        \"name\": \"options\"\n      }\n    ],\n    \"name\": \"doAnother\",\n    \"longname\": \"doAnother\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"doAnother\"\n  },\n  {\n    \"description\": \"This function takes variable input\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"variable\": true,\n        \"description\": \"the property(s) as input\",\n        \"name\": \"prop\"\n      }\n    ],\n    \"name\": \"pluck\",\n    \"longname\": \"pluck\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"pluck\"\n  },\n  {\n    \"kind\": \"class\",\n    \"name\": \"Plucker\",\n    \"longname\": \"Plucker\",\n    \"scope\": \"global\",\n    \"codeName\": \"Plucker\"\n  },\n  {\n    \"description\": \"This function takes variable input\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"an input\",\n        \"name\": \"one\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"variable\": true,\n        \"description\": \"the property(s) as input\",\n        \"name\": \"args\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"variable\": true,\n        \"description\": \"more input\",\n        \"name\": \"three\"\n      }\n    ],\n    \"name\": \"doPluck\",\n    \"longname\": \"Plucker#doPluck\",\n    \"kind\": \"function\",\n    \"memberof\": \"Plucker\",\n    \"scope\": \"instance\",\n    \"codeName\": \"Plucker.prototype.doPluck\"\n  },\n  {\n    \"description\": \"ensure you have some-module installed\",\n    \"requires\": [\n      \"module:some-module\"\n    ],\n    \"name\": \"requirer\",\n    \"longname\": \"requirer\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"requirer\"\n  },\n  {\n    \"description\": \"A number, or a string containing a number.\",\n    \"kind\": \"typedef\",\n    \"name\": \"NumberLike\",\n    \"type\": {\n      \"names\": [\n        \"number\",\n        \"string\"\n      ]\n    },\n    \"longname\": \"NumberLike\",\n    \"scope\": \"global\"\n  },\n  {\n    \"description\": \"Set the magic number.\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"NumberLike\"\n          ]\n        },\n        \"description\": \"The magic number.\",\n        \"name\": \"x\"\n      }\n    ],\n    \"name\": \"setMagicNumber\",\n    \"longname\": \"setMagicNumber\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"setMagicNumber\"\n  },\n  {\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"object\"\n          ]\n        },\n        \"description\": \"the function options\",\n        \"name\": \"options\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"first option\",\n        \"name\": \"options.one\"\n      },\n      {\n        \"type\": {\n          \"names\": [\n            \"string\"\n          ]\n        },\n        \"description\": \"second option\",\n        \"name\": \"options.two\"\n      }\n    ],\n    \"name\": \"doSomething\",\n    \"longname\": \"doSomething\",\n    \"kind\": \"function\",\n    \"scope\": \"global\",\n    \"codeName\": \"doSomething\"\n  }\n]";
-var partials = require("./partials.json");
+$template.value = localStorage.main || "{{>main}}";
+getMarkdown();
 
-$("#template").textContent = data;
+var throttled = f.throttle(getMarkdown, { restPeriod: 500 });
+$template.addEventListener("input", throttled);
 
-var mdStream = dmd({ partials: partials });
-mdStream.on("readable", function(){
-    var chunk = this.read();
-    if (chunk) {
-        console.log(chunk.length);
-        $("#markdown").textContent += chunk.toString();
-    }
-});
-mdStream.end(data);
+function getMarkdown(){
+    $markdown.textContent = "";
+    var template = $template.value;
+    var md = "";
+    
+    var mdStream = dmd({ partials: partials, template: template });
+    mdStream.on("error", function(err){
+        console.log("SHIT FAILED");
+    });
+    mdStream.on("readable", function(){
+        var chunk = this.read();
+        if (chunk) md += chunk.toString();
+    });
+    mdStream.on("end", function(){
+        localStorage.main = $template.value;
+        $markdown.textContent += md;
+        $html.innerHTML = marked(md);
+    })
+    mdStream.end(data);
+}
 
-},{"./partials.json":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json","dmd":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/lib/dmd.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+},{"./partials.json":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json","dmd":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/lib/dmd.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","marked":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/marked/lib/marked.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json":[function(require,module,exports){
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
   "documentation": "{{#identifiers~}}\n  {{#each this~}}\n    {{>identifier~}}\n  {{/each~}}\n{{/identifiers}}",
   "access": "{{#if access}}**Access**: {{{access}}}  \n{{/if~}}",
   "augments": "{{#if augments}}**Extends**: `{{{join augments \", \"}}}`  \n{{/if}}",
@@ -765,9 +785,6 @@ function dmd(options){
     boil.registerPartials(path.resolve(__dirname, "..", "partials/**/*.hbs"));
     boil.registerHelpers(path.resolve(__dirname, "..", "helpers/**/*.js"));
     
-    // console.log(path.resolve(__dirname, "..", "partials/**/*.hbs"))
-    // console.log(boil._handlebars);
-    
     if(options.partials){
         for (var name in options.partials){
             boil._handlebars.registerPartial(name, options.partials[name]);
@@ -1390,13 +1407,12 @@ RenderStream.prototype._flush = function(){
         err.message += this.json.toString();
         return this.emit("error", err);
     }
-    var result = renderTemplate(data, this.options);
-    if (result.length === 0){
-        console.error("Warning: rendering template produced an empty result");
-        console.error("renderingTemplate: " + this.options.template);
-        console.error("data: " + JSON.stringify(data));
+    try {
+        var result = renderTemplate(data, this.options);
+        this.push(result);
+    } catch(err){
+        this.emit("error", err);
     }
-    this.push(result);
     this.push(null);
 };
 
@@ -30580,6 +30596,1323 @@ false
 function isPlainObject(input){
     return typeof input === "object" && !Array.isArray(input);
 }
+},{}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js":[function(require,module,exports){
+"use strict";
+
+/**
+Useful higher-order functions
+@module 
+@alias f
+@example
+```js
+var f = require("function-tools");
+```
+*/
+exports.throttle = throttle;
+
+/**
+Guarantees a function a specified `restPeriod` in between invocations. 
+@param {Function} - the function to throttle
+@param [options] {Object} - the options
+@param [options.restPeriod] {number} - a value in ms
+@returns {Function}
+@alias module:function-tools.throttle
+@example
+```js
+var throttled = f.throttle(myFunction, { restPeriod: 200 });
+throtted(); // this will only execute if at least 200ms since the last invocation
+```
+*/
+function throttle(f, options){
+    var timer = null;
+    var lastRun = 0;
+    
+    return function throttled(){
+        clearTimeout(timer);
+        var fArgs = arguments;
+        var timeSinceLastRun = Date.now() - lastRun;
+        if (timeSinceLastRun > options.restPeriod){
+            f.apply(f, fArgs);
+            lastRun = Date.now();
+        } else {
+            timer = setTimeout(function(){
+                f.apply(f, fArgs);
+                lastRun = Date.now();
+            }, options.restPeriod - timeSinceLastRun);
+        }
+    };
+}
+
+},{}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/marked/lib/marked.js":[function(require,module,exports){
+(function (global){
+/**
+ * marked - a markdown parser
+ * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
+ * https://github.com/chjj/marked
+ */
+
+;(function() {
+
+/**
+ * Block-Level Grammar
+ */
+
+var block = {
+  newline: /^\n+/,
+  code: /^( {4}[^\n]+\n*)+/,
+  fences: noop,
+  hr: /^( *[-*_]){3,} *(?:\n+|$)/,
+  heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
+  nptable: noop,
+  lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
+  blockquote: /^( *>[^\n]+(\n(?!def)[^\n]+)*\n*)+/,
+  list: /^( *)(bull) [\s\S]+?(?:hr|def|\n{2,}(?! )(?!\1bull )\n*|\s*$)/,
+  html: /^ *(?:comment|closed|closing) *(?:\n{2,}|\s*$)/,
+  def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
+  table: noop,
+  paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def))+)\n*/,
+  text: /^[^\n]+/
+};
+
+block.bullet = /(?:[*+-]|\d+\.)/;
+block.item = /^( *)(bull) [^\n]*(?:\n(?!\1bull )[^\n]*)*/;
+block.item = replace(block.item, 'gm')
+  (/bull/g, block.bullet)
+  ();
+
+block.list = replace(block.list)
+  (/bull/g, block.bullet)
+  ('hr', '\\n+(?=\\1?(?:[-*_] *){3,}(?:\\n+|$))')
+  ('def', '\\n+(?=' + block.def.source + ')')
+  ();
+
+block.blockquote = replace(block.blockquote)
+  ('def', block.def)
+  ();
+
+block._tag = '(?!(?:'
+  + 'a|em|strong|small|s|cite|q|dfn|abbr|data|time|code'
+  + '|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo'
+  + '|span|br|wbr|ins|del|img)\\b)\\w+(?!:/|[^\\w\\s@]*@)\\b';
+
+block.html = replace(block.html)
+  ('comment', /<!--[\s\S]*?-->/)
+  ('closed', /<(tag)[\s\S]+?<\/\1>/)
+  ('closing', /<tag(?:"[^"]*"|'[^']*'|[^'">])*?>/)
+  (/tag/g, block._tag)
+  ();
+
+block.paragraph = replace(block.paragraph)
+  ('hr', block.hr)
+  ('heading', block.heading)
+  ('lheading', block.lheading)
+  ('blockquote', block.blockquote)
+  ('tag', '<' + block._tag)
+  ('def', block.def)
+  ();
+
+/**
+ * Normal Block Grammar
+ */
+
+block.normal = merge({}, block);
+
+/**
+ * GFM Block Grammar
+ */
+
+block.gfm = merge({}, block.normal, {
+  fences: /^ *(`{3,}|~{3,}) *(\S+)? *\n([\s\S]+?)\s*\1 *(?:\n+|$)/,
+  paragraph: /^/
+});
+
+block.gfm.paragraph = replace(block.paragraph)
+  ('(?!', '(?!'
+    + block.gfm.fences.source.replace('\\1', '\\2') + '|'
+    + block.list.source.replace('\\1', '\\3') + '|')
+  ();
+
+/**
+ * GFM + Tables Block Grammar
+ */
+
+block.tables = merge({}, block.gfm, {
+  nptable: /^ *(\S.*\|.*)\n *([-:]+ *\|[-| :]*)\n((?:.*\|.*(?:\n|$))*)\n*/,
+  table: /^ *\|(.+)\n *\|( *[-:]+[-| :]*)\n((?: *\|.*(?:\n|$))*)\n*/
+});
+
+/**
+ * Block Lexer
+ */
+
+function Lexer(options) {
+  this.tokens = [];
+  this.tokens.links = {};
+  this.options = options || marked.defaults;
+  this.rules = block.normal;
+
+  if (this.options.gfm) {
+    if (this.options.tables) {
+      this.rules = block.tables;
+    } else {
+      this.rules = block.gfm;
+    }
+  }
+}
+
+/**
+ * Expose Block Rules
+ */
+
+Lexer.rules = block;
+
+/**
+ * Static Lex Method
+ */
+
+Lexer.lex = function(src, options) {
+  var lexer = new Lexer(options);
+  return lexer.lex(src);
+};
+
+/**
+ * Preprocessing
+ */
+
+Lexer.prototype.lex = function(src) {
+  src = src
+    .replace(/\r\n|\r/g, '\n')
+    .replace(/\t/g, '    ')
+    .replace(/\u00a0/g, ' ')
+    .replace(/\u2424/g, '\n');
+
+  return this.token(src, true);
+};
+
+/**
+ * Lexing
+ */
+
+Lexer.prototype.token = function(src, top, bq) {
+  var src = src.replace(/^ +$/gm, '')
+    , next
+    , loose
+    , cap
+    , bull
+    , b
+    , item
+    , space
+    , i
+    , l;
+
+  while (src) {
+    // newline
+    if (cap = this.rules.newline.exec(src)) {
+      src = src.substring(cap[0].length);
+      if (cap[0].length > 1) {
+        this.tokens.push({
+          type: 'space'
+        });
+      }
+    }
+
+    // code
+    if (cap = this.rules.code.exec(src)) {
+      src = src.substring(cap[0].length);
+      cap = cap[0].replace(/^ {4}/gm, '');
+      this.tokens.push({
+        type: 'code',
+        text: !this.options.pedantic
+          ? cap.replace(/\n+$/, '')
+          : cap
+      });
+      continue;
+    }
+
+    // fences (gfm)
+    if (cap = this.rules.fences.exec(src)) {
+      src = src.substring(cap[0].length);
+      this.tokens.push({
+        type: 'code',
+        lang: cap[2],
+        text: cap[3]
+      });
+      continue;
+    }
+
+    // heading
+    if (cap = this.rules.heading.exec(src)) {
+      src = src.substring(cap[0].length);
+      this.tokens.push({
+        type: 'heading',
+        depth: cap[1].length,
+        text: cap[2]
+      });
+      continue;
+    }
+
+    // table no leading pipe (gfm)
+    if (top && (cap = this.rules.nptable.exec(src))) {
+      src = src.substring(cap[0].length);
+
+      item = {
+        type: 'table',
+        header: cap[1].replace(/^ *| *\| *$/g, '').split(/ *\| */),
+        align: cap[2].replace(/^ *|\| *$/g, '').split(/ *\| */),
+        cells: cap[3].replace(/\n$/, '').split('\n')
+      };
+
+      for (i = 0; i < item.align.length; i++) {
+        if (/^ *-+: *$/.test(item.align[i])) {
+          item.align[i] = 'right';
+        } else if (/^ *:-+: *$/.test(item.align[i])) {
+          item.align[i] = 'center';
+        } else if (/^ *:-+ *$/.test(item.align[i])) {
+          item.align[i] = 'left';
+        } else {
+          item.align[i] = null;
+        }
+      }
+
+      for (i = 0; i < item.cells.length; i++) {
+        item.cells[i] = item.cells[i].split(/ *\| */);
+      }
+
+      this.tokens.push(item);
+
+      continue;
+    }
+
+    // lheading
+    if (cap = this.rules.lheading.exec(src)) {
+      src = src.substring(cap[0].length);
+      this.tokens.push({
+        type: 'heading',
+        depth: cap[2] === '=' ? 1 : 2,
+        text: cap[1]
+      });
+      continue;
+    }
+
+    // hr
+    if (cap = this.rules.hr.exec(src)) {
+      src = src.substring(cap[0].length);
+      this.tokens.push({
+        type: 'hr'
+      });
+      continue;
+    }
+
+    // blockquote
+    if (cap = this.rules.blockquote.exec(src)) {
+      src = src.substring(cap[0].length);
+
+      this.tokens.push({
+        type: 'blockquote_start'
+      });
+
+      cap = cap[0].replace(/^ *> ?/gm, '');
+
+      // Pass `top` to keep the current
+      // "toplevel" state. This is exactly
+      // how markdown.pl works.
+      this.token(cap, top, true);
+
+      this.tokens.push({
+        type: 'blockquote_end'
+      });
+
+      continue;
+    }
+
+    // list
+    if (cap = this.rules.list.exec(src)) {
+      src = src.substring(cap[0].length);
+      bull = cap[2];
+
+      this.tokens.push({
+        type: 'list_start',
+        ordered: bull.length > 1
+      });
+
+      // Get each top-level item.
+      cap = cap[0].match(this.rules.item);
+
+      next = false;
+      l = cap.length;
+      i = 0;
+
+      for (; i < l; i++) {
+        item = cap[i];
+
+        // Remove the list item's bullet
+        // so it is seen as the next token.
+        space = item.length;
+        item = item.replace(/^ *([*+-]|\d+\.) +/, '');
+
+        // Outdent whatever the
+        // list item contains. Hacky.
+        if (~item.indexOf('\n ')) {
+          space -= item.length;
+          item = !this.options.pedantic
+            ? item.replace(new RegExp('^ {1,' + space + '}', 'gm'), '')
+            : item.replace(/^ {1,4}/gm, '');
+        }
+
+        // Determine whether the next list item belongs here.
+        // Backpedal if it does not belong in this list.
+        if (this.options.smartLists && i !== l - 1) {
+          b = block.bullet.exec(cap[i + 1])[0];
+          if (bull !== b && !(bull.length > 1 && b.length > 1)) {
+            src = cap.slice(i + 1).join('\n') + src;
+            i = l - 1;
+          }
+        }
+
+        // Determine whether item is loose or not.
+        // Use: /(^|\n)(?! )[^\n]+\n\n(?!\s*$)/
+        // for discount behavior.
+        loose = next || /\n\n(?!\s*$)/.test(item);
+        if (i !== l - 1) {
+          next = item.charAt(item.length - 1) === '\n';
+          if (!loose) loose = next;
+        }
+
+        this.tokens.push({
+          type: loose
+            ? 'loose_item_start'
+            : 'list_item_start'
+        });
+
+        // Recurse.
+        this.token(item, false, bq);
+
+        this.tokens.push({
+          type: 'list_item_end'
+        });
+      }
+
+      this.tokens.push({
+        type: 'list_end'
+      });
+
+      continue;
+    }
+
+    // html
+    if (cap = this.rules.html.exec(src)) {
+      src = src.substring(cap[0].length);
+      this.tokens.push({
+        type: this.options.sanitize
+          ? 'paragraph'
+          : 'html',
+        pre: cap[1] === 'pre' || cap[1] === 'script' || cap[1] === 'style',
+        text: cap[0]
+      });
+      continue;
+    }
+
+    // def
+    if ((!bq && top) && (cap = this.rules.def.exec(src))) {
+      src = src.substring(cap[0].length);
+      this.tokens.links[cap[1].toLowerCase()] = {
+        href: cap[2],
+        title: cap[3]
+      };
+      continue;
+    }
+
+    // table (gfm)
+    if (top && (cap = this.rules.table.exec(src))) {
+      src = src.substring(cap[0].length);
+
+      item = {
+        type: 'table',
+        header: cap[1].replace(/^ *| *\| *$/g, '').split(/ *\| */),
+        align: cap[2].replace(/^ *|\| *$/g, '').split(/ *\| */),
+        cells: cap[3].replace(/(?: *\| *)?\n$/, '').split('\n')
+      };
+
+      for (i = 0; i < item.align.length; i++) {
+        if (/^ *-+: *$/.test(item.align[i])) {
+          item.align[i] = 'right';
+        } else if (/^ *:-+: *$/.test(item.align[i])) {
+          item.align[i] = 'center';
+        } else if (/^ *:-+ *$/.test(item.align[i])) {
+          item.align[i] = 'left';
+        } else {
+          item.align[i] = null;
+        }
+      }
+
+      for (i = 0; i < item.cells.length; i++) {
+        item.cells[i] = item.cells[i]
+          .replace(/^ *\| *| *\| *$/g, '')
+          .split(/ *\| */);
+      }
+
+      this.tokens.push(item);
+
+      continue;
+    }
+
+    // top-level paragraph
+    if (top && (cap = this.rules.paragraph.exec(src))) {
+      src = src.substring(cap[0].length);
+      this.tokens.push({
+        type: 'paragraph',
+        text: cap[1].charAt(cap[1].length - 1) === '\n'
+          ? cap[1].slice(0, -1)
+          : cap[1]
+      });
+      continue;
+    }
+
+    // text
+    if (cap = this.rules.text.exec(src)) {
+      // Top-level should never reach here.
+      src = src.substring(cap[0].length);
+      this.tokens.push({
+        type: 'text',
+        text: cap[0]
+      });
+      continue;
+    }
+
+    if (src) {
+      throw new
+        Error('Infinite loop on byte: ' + src.charCodeAt(0));
+    }
+  }
+
+  return this.tokens;
+};
+
+/**
+ * Inline-Level Grammar
+ */
+
+var inline = {
+  escape: /^\\([\\`*{}\[\]()#+\-.!_>])/,
+  autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
+  url: noop,
+  tag: /^<!--[\s\S]*?-->|^<\/?\w+(?:"[^"]*"|'[^']*'|[^'">])*?>/,
+  link: /^!?\[(inside)\]\(href\)/,
+  reflink: /^!?\[(inside)\]\s*\[([^\]]*)\]/,
+  nolink: /^!?\[((?:\[[^\]]*\]|[^\[\]])*)\]/,
+  strong: /^__([\s\S]+?)__(?!_)|^\*\*([\s\S]+?)\*\*(?!\*)/,
+  em: /^\b_((?:__|[\s\S])+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,
+  code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
+  br: /^ {2,}\n(?!\s*$)/,
+  del: noop,
+  text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/
+};
+
+inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
+inline._href = /\s*<?([\s\S]*?)>?(?:\s+['"]([\s\S]*?)['"])?\s*/;
+
+inline.link = replace(inline.link)
+  ('inside', inline._inside)
+  ('href', inline._href)
+  ();
+
+inline.reflink = replace(inline.reflink)
+  ('inside', inline._inside)
+  ();
+
+/**
+ * Normal Inline Grammar
+ */
+
+inline.normal = merge({}, inline);
+
+/**
+ * Pedantic Inline Grammar
+ */
+
+inline.pedantic = merge({}, inline.normal, {
+  strong: /^__(?=\S)([\s\S]*?\S)__(?!_)|^\*\*(?=\S)([\s\S]*?\S)\*\*(?!\*)/,
+  em: /^_(?=\S)([\s\S]*?\S)_(?!_)|^\*(?=\S)([\s\S]*?\S)\*(?!\*)/
+});
+
+/**
+ * GFM Inline Grammar
+ */
+
+inline.gfm = merge({}, inline.normal, {
+  escape: replace(inline.escape)('])', '~|])')(),
+  url: /^(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/,
+  del: /^~~(?=\S)([\s\S]*?\S)~~/,
+  text: replace(inline.text)
+    (']|', '~]|')
+    ('|', '|https?://|')
+    ()
+});
+
+/**
+ * GFM + Line Breaks Inline Grammar
+ */
+
+inline.breaks = merge({}, inline.gfm, {
+  br: replace(inline.br)('{2,}', '*')(),
+  text: replace(inline.gfm.text)('{2,}', '*')()
+});
+
+/**
+ * Inline Lexer & Compiler
+ */
+
+function InlineLexer(links, options) {
+  this.options = options || marked.defaults;
+  this.links = links;
+  this.rules = inline.normal;
+  this.renderer = this.options.renderer || new Renderer;
+  this.renderer.options = this.options;
+
+  if (!this.links) {
+    throw new
+      Error('Tokens array requires a `links` property.');
+  }
+
+  if (this.options.gfm) {
+    if (this.options.breaks) {
+      this.rules = inline.breaks;
+    } else {
+      this.rules = inline.gfm;
+    }
+  } else if (this.options.pedantic) {
+    this.rules = inline.pedantic;
+  }
+}
+
+/**
+ * Expose Inline Rules
+ */
+
+InlineLexer.rules = inline;
+
+/**
+ * Static Lexing/Compiling Method
+ */
+
+InlineLexer.output = function(src, links, options) {
+  var inline = new InlineLexer(links, options);
+  return inline.output(src);
+};
+
+/**
+ * Lexing/Compiling
+ */
+
+InlineLexer.prototype.output = function(src) {
+  var out = ''
+    , link
+    , text
+    , href
+    , cap;
+
+  while (src) {
+    // escape
+    if (cap = this.rules.escape.exec(src)) {
+      src = src.substring(cap[0].length);
+      out += cap[1];
+      continue;
+    }
+
+    // autolink
+    if (cap = this.rules.autolink.exec(src)) {
+      src = src.substring(cap[0].length);
+      if (cap[2] === '@') {
+        text = cap[1].charAt(6) === ':'
+          ? this.mangle(cap[1].substring(7))
+          : this.mangle(cap[1]);
+        href = this.mangle('mailto:') + text;
+      } else {
+        text = escape(cap[1]);
+        href = text;
+      }
+      out += this.renderer.link(href, null, text);
+      continue;
+    }
+
+    // url (gfm)
+    if (!this.inLink && (cap = this.rules.url.exec(src))) {
+      src = src.substring(cap[0].length);
+      text = escape(cap[1]);
+      href = text;
+      out += this.renderer.link(href, null, text);
+      continue;
+    }
+
+    // tag
+    if (cap = this.rules.tag.exec(src)) {
+      if (!this.inLink && /^<a /i.test(cap[0])) {
+        this.inLink = true;
+      } else if (this.inLink && /^<\/a>/i.test(cap[0])) {
+        this.inLink = false;
+      }
+      src = src.substring(cap[0].length);
+      out += this.options.sanitize
+        ? escape(cap[0])
+        : cap[0];
+      continue;
+    }
+
+    // link
+    if (cap = this.rules.link.exec(src)) {
+      src = src.substring(cap[0].length);
+      this.inLink = true;
+      out += this.outputLink(cap, {
+        href: cap[2],
+        title: cap[3]
+      });
+      this.inLink = false;
+      continue;
+    }
+
+    // reflink, nolink
+    if ((cap = this.rules.reflink.exec(src))
+        || (cap = this.rules.nolink.exec(src))) {
+      src = src.substring(cap[0].length);
+      link = (cap[2] || cap[1]).replace(/\s+/g, ' ');
+      link = this.links[link.toLowerCase()];
+      if (!link || !link.href) {
+        out += cap[0].charAt(0);
+        src = cap[0].substring(1) + src;
+        continue;
+      }
+      this.inLink = true;
+      out += this.outputLink(cap, link);
+      this.inLink = false;
+      continue;
+    }
+
+    // strong
+    if (cap = this.rules.strong.exec(src)) {
+      src = src.substring(cap[0].length);
+      out += this.renderer.strong(this.output(cap[2] || cap[1]));
+      continue;
+    }
+
+    // em
+    if (cap = this.rules.em.exec(src)) {
+      src = src.substring(cap[0].length);
+      out += this.renderer.em(this.output(cap[2] || cap[1]));
+      continue;
+    }
+
+    // code
+    if (cap = this.rules.code.exec(src)) {
+      src = src.substring(cap[0].length);
+      out += this.renderer.codespan(escape(cap[2], true));
+      continue;
+    }
+
+    // br
+    if (cap = this.rules.br.exec(src)) {
+      src = src.substring(cap[0].length);
+      out += this.renderer.br();
+      continue;
+    }
+
+    // del (gfm)
+    if (cap = this.rules.del.exec(src)) {
+      src = src.substring(cap[0].length);
+      out += this.renderer.del(this.output(cap[1]));
+      continue;
+    }
+
+    // text
+    if (cap = this.rules.text.exec(src)) {
+      src = src.substring(cap[0].length);
+      out += escape(this.smartypants(cap[0]));
+      continue;
+    }
+
+    if (src) {
+      throw new
+        Error('Infinite loop on byte: ' + src.charCodeAt(0));
+    }
+  }
+
+  return out;
+};
+
+/**
+ * Compile Link
+ */
+
+InlineLexer.prototype.outputLink = function(cap, link) {
+  var href = escape(link.href)
+    , title = link.title ? escape(link.title) : null;
+
+  return cap[0].charAt(0) !== '!'
+    ? this.renderer.link(href, title, this.output(cap[1]))
+    : this.renderer.image(href, title, escape(cap[1]));
+};
+
+/**
+ * Smartypants Transformations
+ */
+
+InlineLexer.prototype.smartypants = function(text) {
+  if (!this.options.smartypants) return text;
+  return text
+    // em-dashes
+    .replace(/--/g, '\u2014')
+    // opening singles
+    .replace(/(^|[-\u2014/(\[{"\s])'/g, '$1\u2018')
+    // closing singles & apostrophes
+    .replace(/'/g, '\u2019')
+    // opening doubles
+    .replace(/(^|[-\u2014/(\[{\u2018\s])"/g, '$1\u201c')
+    // closing doubles
+    .replace(/"/g, '\u201d')
+    // ellipses
+    .replace(/\.{3}/g, '\u2026');
+};
+
+/**
+ * Mangle Links
+ */
+
+InlineLexer.prototype.mangle = function(text) {
+  var out = ''
+    , l = text.length
+    , i = 0
+    , ch;
+
+  for (; i < l; i++) {
+    ch = text.charCodeAt(i);
+    if (Math.random() > 0.5) {
+      ch = 'x' + ch.toString(16);
+    }
+    out += '&#' + ch + ';';
+  }
+
+  return out;
+};
+
+/**
+ * Renderer
+ */
+
+function Renderer(options) {
+  this.options = options || {};
+}
+
+Renderer.prototype.code = function(code, lang, escaped) {
+  if (this.options.highlight) {
+    var out = this.options.highlight(code, lang);
+    if (out != null && out !== code) {
+      escaped = true;
+      code = out;
+    }
+  }
+
+  if (!lang) {
+    return '<pre><code>'
+      + (escaped ? code : escape(code, true))
+      + '\n</code></pre>';
+  }
+
+  return '<pre><code class="'
+    + this.options.langPrefix
+    + escape(lang, true)
+    + '">'
+    + (escaped ? code : escape(code, true))
+    + '\n</code></pre>\n';
+};
+
+Renderer.prototype.blockquote = function(quote) {
+  return '<blockquote>\n' + quote + '</blockquote>\n';
+};
+
+Renderer.prototype.html = function(html) {
+  return html;
+};
+
+Renderer.prototype.heading = function(text, level, raw) {
+  return '<h'
+    + level
+    + ' id="'
+    + this.options.headerPrefix
+    + raw.toLowerCase().replace(/[^\w]+/g, '-')
+    + '">'
+    + text
+    + '</h'
+    + level
+    + '>\n';
+};
+
+Renderer.prototype.hr = function() {
+  return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
+};
+
+Renderer.prototype.list = function(body, ordered) {
+  var type = ordered ? 'ol' : 'ul';
+  return '<' + type + '>\n' + body + '</' + type + '>\n';
+};
+
+Renderer.prototype.listitem = function(text) {
+  return '<li>' + text + '</li>\n';
+};
+
+Renderer.prototype.paragraph = function(text) {
+  return '<p>' + text + '</p>\n';
+};
+
+Renderer.prototype.table = function(header, body) {
+  return '<table>\n'
+    + '<thead>\n'
+    + header
+    + '</thead>\n'
+    + '<tbody>\n'
+    + body
+    + '</tbody>\n'
+    + '</table>\n';
+};
+
+Renderer.prototype.tablerow = function(content) {
+  return '<tr>\n' + content + '</tr>\n';
+};
+
+Renderer.prototype.tablecell = function(content, flags) {
+  var type = flags.header ? 'th' : 'td';
+  var tag = flags.align
+    ? '<' + type + ' style="text-align:' + flags.align + '">'
+    : '<' + type + '>';
+  return tag + content + '</' + type + '>\n';
+};
+
+// span level renderer
+Renderer.prototype.strong = function(text) {
+  return '<strong>' + text + '</strong>';
+};
+
+Renderer.prototype.em = function(text) {
+  return '<em>' + text + '</em>';
+};
+
+Renderer.prototype.codespan = function(text) {
+  return '<code>' + text + '</code>';
+};
+
+Renderer.prototype.br = function() {
+  return this.options.xhtml ? '<br/>' : '<br>';
+};
+
+Renderer.prototype.del = function(text) {
+  return '<del>' + text + '</del>';
+};
+
+Renderer.prototype.link = function(href, title, text) {
+  if (this.options.sanitize) {
+    try {
+      var prot = decodeURIComponent(unescape(href))
+        .replace(/[^\w:]/g, '')
+        .toLowerCase();
+    } catch (e) {
+      return '';
+    }
+    if (prot.indexOf('javascript:') === 0) {
+      return '';
+    }
+  }
+  var out = '<a href="' + href + '"';
+  if (title) {
+    out += ' title="' + title + '"';
+  }
+  out += '>' + text + '</a>';
+  return out;
+};
+
+Renderer.prototype.image = function(href, title, text) {
+  var out = '<img src="' + href + '" alt="' + text + '"';
+  if (title) {
+    out += ' title="' + title + '"';
+  }
+  out += this.options.xhtml ? '/>' : '>';
+  return out;
+};
+
+/**
+ * Parsing & Compiling
+ */
+
+function Parser(options) {
+  this.tokens = [];
+  this.token = null;
+  this.options = options || marked.defaults;
+  this.options.renderer = this.options.renderer || new Renderer;
+  this.renderer = this.options.renderer;
+  this.renderer.options = this.options;
+}
+
+/**
+ * Static Parse Method
+ */
+
+Parser.parse = function(src, options, renderer) {
+  var parser = new Parser(options, renderer);
+  return parser.parse(src);
+};
+
+/**
+ * Parse Loop
+ */
+
+Parser.prototype.parse = function(src) {
+  this.inline = new InlineLexer(src.links, this.options, this.renderer);
+  this.tokens = src.reverse();
+
+  var out = '';
+  while (this.next()) {
+    out += this.tok();
+  }
+
+  return out;
+};
+
+/**
+ * Next Token
+ */
+
+Parser.prototype.next = function() {
+  return this.token = this.tokens.pop();
+};
+
+/**
+ * Preview Next Token
+ */
+
+Parser.prototype.peek = function() {
+  return this.tokens[this.tokens.length - 1] || 0;
+};
+
+/**
+ * Parse Text Tokens
+ */
+
+Parser.prototype.parseText = function() {
+  var body = this.token.text;
+
+  while (this.peek().type === 'text') {
+    body += '\n' + this.next().text;
+  }
+
+  return this.inline.output(body);
+};
+
+/**
+ * Parse Current Token
+ */
+
+Parser.prototype.tok = function() {
+  switch (this.token.type) {
+    case 'space': {
+      return '';
+    }
+    case 'hr': {
+      return this.renderer.hr();
+    }
+    case 'heading': {
+      return this.renderer.heading(
+        this.inline.output(this.token.text),
+        this.token.depth,
+        this.token.text);
+    }
+    case 'code': {
+      return this.renderer.code(this.token.text,
+        this.token.lang,
+        this.token.escaped);
+    }
+    case 'table': {
+      var header = ''
+        , body = ''
+        , i
+        , row
+        , cell
+        , flags
+        , j;
+
+      // header
+      cell = '';
+      for (i = 0; i < this.token.header.length; i++) {
+        flags = { header: true, align: this.token.align[i] };
+        cell += this.renderer.tablecell(
+          this.inline.output(this.token.header[i]),
+          { header: true, align: this.token.align[i] }
+        );
+      }
+      header += this.renderer.tablerow(cell);
+
+      for (i = 0; i < this.token.cells.length; i++) {
+        row = this.token.cells[i];
+
+        cell = '';
+        for (j = 0; j < row.length; j++) {
+          cell += this.renderer.tablecell(
+            this.inline.output(row[j]),
+            { header: false, align: this.token.align[j] }
+          );
+        }
+
+        body += this.renderer.tablerow(cell);
+      }
+      return this.renderer.table(header, body);
+    }
+    case 'blockquote_start': {
+      var body = '';
+
+      while (this.next().type !== 'blockquote_end') {
+        body += this.tok();
+      }
+
+      return this.renderer.blockquote(body);
+    }
+    case 'list_start': {
+      var body = ''
+        , ordered = this.token.ordered;
+
+      while (this.next().type !== 'list_end') {
+        body += this.tok();
+      }
+
+      return this.renderer.list(body, ordered);
+    }
+    case 'list_item_start': {
+      var body = '';
+
+      while (this.next().type !== 'list_item_end') {
+        body += this.token.type === 'text'
+          ? this.parseText()
+          : this.tok();
+      }
+
+      return this.renderer.listitem(body);
+    }
+    case 'loose_item_start': {
+      var body = '';
+
+      while (this.next().type !== 'list_item_end') {
+        body += this.tok();
+      }
+
+      return this.renderer.listitem(body);
+    }
+    case 'html': {
+      var html = !this.token.pre && !this.options.pedantic
+        ? this.inline.output(this.token.text)
+        : this.token.text;
+      return this.renderer.html(html);
+    }
+    case 'paragraph': {
+      return this.renderer.paragraph(this.inline.output(this.token.text));
+    }
+    case 'text': {
+      return this.renderer.paragraph(this.parseText());
+    }
+  }
+};
+
+/**
+ * Helpers
+ */
+
+function escape(html, encode) {
+  return html
+    .replace(!encode ? /&(?!#?\w+;)/g : /&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function unescape(html) {
+  return html.replace(/&([#\w]+);/g, function(_, n) {
+    n = n.toLowerCase();
+    if (n === 'colon') return ':';
+    if (n.charAt(0) === '#') {
+      return n.charAt(1) === 'x'
+        ? String.fromCharCode(parseInt(n.substring(2), 16))
+        : String.fromCharCode(+n.substring(1));
+    }
+    return '';
+  });
+}
+
+function replace(regex, opt) {
+  regex = regex.source;
+  opt = opt || '';
+  return function self(name, val) {
+    if (!name) return new RegExp(regex, opt);
+    val = val.source || val;
+    val = val.replace(/(^|[^\[])\^/g, '$1');
+    regex = regex.replace(name, val);
+    return self;
+  };
+}
+
+function noop() {}
+noop.exec = noop;
+
+function merge(obj) {
+  var i = 1
+    , target
+    , key;
+
+  for (; i < arguments.length; i++) {
+    target = arguments[i];
+    for (key in target) {
+      if (Object.prototype.hasOwnProperty.call(target, key)) {
+        obj[key] = target[key];
+      }
+    }
+  }
+
+  return obj;
+}
+
+
+/**
+ * Marked
+ */
+
+function marked(src, opt, callback) {
+  if (callback || typeof opt === 'function') {
+    if (!callback) {
+      callback = opt;
+      opt = null;
+    }
+
+    opt = merge({}, marked.defaults, opt || {});
+
+    var highlight = opt.highlight
+      , tokens
+      , pending
+      , i = 0;
+
+    try {
+      tokens = Lexer.lex(src, opt)
+    } catch (e) {
+      return callback(e);
+    }
+
+    pending = tokens.length;
+
+    var done = function() {
+      var out, err;
+
+      try {
+        out = Parser.parse(tokens, opt);
+      } catch (e) {
+        err = e;
+      }
+
+      opt.highlight = highlight;
+
+      return err
+        ? callback(err)
+        : callback(null, out);
+    };
+
+    if (!highlight || highlight.length < 3) {
+      return done();
+    }
+
+    delete opt.highlight;
+
+    if (!pending) return done();
+
+    for (; i < tokens.length; i++) {
+      (function(token) {
+        if (token.type !== 'code') {
+          return --pending || done();
+        }
+        return highlight(token.text, token.lang, function(err, code) {
+          if (code == null || code === token.text) {
+            return --pending || done();
+          }
+          token.text = code;
+          token.escaped = true;
+          --pending || done();
+        });
+      })(tokens[i]);
+    }
+
+    return;
+  }
+  try {
+    if (opt) opt = merge({}, marked.defaults, opt);
+    return Parser.parse(Lexer.lex(src, opt), opt);
+  } catch (e) {
+    e.message += '\nPlease report this to https://github.com/chjj/marked.';
+    if ((opt || marked.defaults).silent) {
+      return '<p>An error occured:</p><pre>'
+        + escape(e.message + '', true)
+        + '</pre>';
+    }
+    throw e;
+  }
+}
+
+/**
+ * Options
+ */
+
+marked.options =
+marked.setOptions = function(opt) {
+  merge(marked.defaults, opt);
+  return marked;
+};
+
+marked.defaults = {
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  sanitize: false,
+  smartLists: false,
+  silent: false,
+  highlight: null,
+  langPrefix: 'lang-',
+  smartypants: false,
+  headerPrefix: '',
+  renderer: new Renderer,
+  xhtml: false
+};
+
+/**
+ * Expose
+ */
+
+marked.Parser = Parser;
+marked.parser = Parser.parse;
+
+marked.Renderer = Renderer;
+
+marked.Lexer = Lexer;
+marked.lexer = Lexer.lex;
+
+marked.InlineLexer = InlineLexer;
+marked.inlineLexer = InlineLexer.output;
+
+marked.parse = marked;
+
+if (typeof exports === 'object') {
+  module.exports = marked;
+} else if (typeof define === 'function' && define.amd) {
+  define(function() { return marked; });
+} else {
+  this.marked = marked;
+}
+
+}).call(function() {
+  return this || (typeof window !== 'undefined' ? window : global);
+}());
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],"/usr/local/lib/node_modules/watchify/node_modules/browserify/lib/_empty.js":[function(require,module,exports){
 
 },{}],"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/assert/assert.js":[function(require,module,exports){
@@ -32923,7 +34256,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 },{}],"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/constants-browserify/constants.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
   "O_RDONLY": 0,
   "O_WRONLY": 1,
   "O_RDWR": 2,
