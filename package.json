@@ -1,23 +1,16 @@
 {
   "name": "dmd-site",
   "version": "0.0.0",
-  "description": "",
+  "description": "Demo site for dmd",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/75lb/dmd.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/75lb/dmd/issues"
-  },
+  "repository": "https://github.com/75lb/dmd.git",
   "homepage": "https://github.com/75lb/dmd",
   "dependencies": {
     "brfs": "^1.2.0",
-    "dmd": "^0.2.7"
-  }
+    "dmd": "^0.2.7",
+    "file-set": "^0.2.1"
+  },
+  "local-web-server": { "port": 8070 }
 }
