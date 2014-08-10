@@ -29,7 +29,7 @@ function refreshMarkdown(){
     
     var mdStream = dmd({ partials: partials, template: template });
     mdStream.on("error", function(err){
-        console.log("SHIT FAILED");
+        // console.log("SHIT FAILED");
     });
     mdStream.on("readable", function(){
         var chunk = this.read();

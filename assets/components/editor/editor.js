@@ -25,5 +25,16 @@ function Editor(el, options){
         self.emit("input", self.file);
     }, { restPeriod: 500 });
     el.addEventListener("input", throttled);
+    
+    var select = $(".files");
+    options.workspace.forEach(function(file){
+        var option = document.createElement("option");
+        option.value = file.name;
+        option.textContent = file.name;
+        select.appendChild(option);
+    });
+    select.addEventListener("change", function(){
+        el.value = a.findWhere(options.workspace, { name: this.value }).content;
+    });
 };
 util.inherits(Editor, EventEmitter);

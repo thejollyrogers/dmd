@@ -30,7 +30,7 @@ function refreshMarkdown(){
     
     var mdStream = dmd({ partials: partials, template: template });
     mdStream.on("error", function(err){
-        console.log("SHIT FAILED");
+        // console.log("SHIT FAILED");
     });
     mdStream.on("readable", function(){
         var chunk = this.read();
@@ -73,11 +73,22 @@ function Editor(el, options){
         self.emit("input", self.file);
     }, { restPeriod: 500 });
     el.addEventListener("input", throttled);
+    
+    var select = $(".files");
+    options.workspace.forEach(function(file){
+        var option = document.createElement("option");
+        option.value = file.name;
+        option.textContent = file.name;
+        select.appendChild(option);
+    });
+    select.addEventListener("change", function(){
+        el.value = a.findWhere(options.workspace, { name: this.value }).content;
+    });
 };
 util.inherits(Editor, EventEmitter);
 
 },{"array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js","events":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/events/events.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","util":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/util/util.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json":[function(require,module,exports){
-module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
   "documentation": "{{#identifiers~}}\n  {{#each this~}}\n    {{>identifier~}}\n  {{/each~}}\n{{/identifiers}}",
   "access": "{{#if access}}**Access**: {{{access}}}  \n{{/if~}}",
   "augments": "{{#if augments}}**Extends**: `{{{join augments \", \"}}}`  \n{{/if}}",
@@ -34631,7 +34642,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 },{}],"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/constants-browserify/constants.json":[function(require,module,exports){
-module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
   "O_RDONLY": 0,
   "O_WRONLY": 1,
   "O_RDWR": 2,
