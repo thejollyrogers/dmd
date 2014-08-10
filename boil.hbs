@@ -1,0 +1,9 @@
+{
+  "index": {
+    "options": {
+      "partials": "assets/**/*.hbs"
+    },
+    "template": {{{json-stringify (fs-readFile "index.hbs")}}},
+    "dest": "index.html"
+  }
+}

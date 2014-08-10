@@ -9,14 +9,14 @@ var $template = $("#template");
 var $markdown = $("#markdown");
 var $html = $("#html");
 
-var data = fs.readFileSync("../test/fixture/globals.json", "utf8");
+var data = fs.readFileSync("../test/fixture/class.json", "utf8");
 $template.value = localStorage.main || "{{>main}}";
-getMarkdown();
+refreshMarkdown();
 
-var throttled = f.throttle(getMarkdown, { restPeriod: 500 });
+var throttled = f.throttle(refreshMarkdown, { restPeriod: 500 });
 $template.addEventListener("input", throttled);
 
-function getMarkdown(){
+function refreshMarkdown(){
     $markdown.textContent = "";
     var template = $template.value;
     var md = "";
