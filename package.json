@@ -9,6 +9,7 @@
   "repository": "https://github.com/75lb/dmd.git",
   "homepage": "https://github.com/75lb/dmd",
   "dependencies": {
+    "array-tools": "^1.3.0",
     "brfs": "^1.2.0",
     "dmd": "^0.2.7",
     "file-set": "^0.2.1",

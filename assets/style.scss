@@ -47,7 +47,7 @@ body {
     display: flex;
     flex-direction: column;
 
-    textarea {
+    .editor {
         @extend .box;
         @extend .monospace;
         flex: 1;

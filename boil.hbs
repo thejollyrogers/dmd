@@ -1,9 +1,13 @@
 {
+  "options": {
+    "partials": "assets/**/*.hbs"
+  },
   "index": {
-    "options": {
-      "partials": "assets/**/*.hbs"
-    },
     "template": {{{json-stringify (fs-readFile "index.hbs")}}},
     "dest": "index.html"
+  },
+  "editor": {
+    "template": {{{json-stringify (fs-readFile "assets/components/editor/demo.hbs")}}},
+    "dest": "assets/components/editor/demo.html"
   }
 }

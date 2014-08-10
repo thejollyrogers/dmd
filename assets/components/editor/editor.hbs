@@ -1,1 +1,5 @@
-<textarea {{#if id}}id="{{id}}"{{/if}} class="editor" {{#if autofocus}}autofocus{{/if}}></textarea>
+<textarea class="editor"
+{{~#if id}} id="{{id}}"{{/if}}
+{{~#if autofocus}} autofocus{{/if}}
+{{~#if cols}} cols="{{cols}}"{{/if}}
+{{~#if rows}} rows="{{rows}}"{{/if}}></textarea>
