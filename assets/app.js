@@ -3,22 +3,28 @@ var fs = require("fs");
 var f = require("function-tools");
 var partials = require("./partials.json");
 var marked = require("marked");
+var Editor = require("./components/editor/editor");
 
 var $ = document.querySelector.bind(document);
-var $template = $("#template");
 var $markdown = $("#markdown");
 var $html = $("#html");
 
-var data = fs.readFileSync("../test/fixture/class.json", "utf8");
-$template.value = localStorage.main || "{{>main}}";
-refreshMarkdown();
+var editor = new Editor($("#template"), {
+    workspace: Object.keys(partials).map(function(key){
+        return {
+            name: key,
+            content: partials[key],
+            default: key === "authors"
+        };
+    })
+});
 
-var throttled = f.throttle(refreshMarkdown, { restPeriod: 500 });
-$template.addEventListener("input", throttled);
+editor.on("input", refreshMarkdown);
+refreshMarkdown();
 
 function refreshMarkdown(){
     $markdown.textContent = "";
-    var template = $template.value;
+    var template = editor.value;
     var md = "";
     
     var mdStream = dmd({ partials: partials, template: template });
@@ -30,9 +36,10 @@ function refreshMarkdown(){
         if (chunk) md += chunk.toString();
     });
     mdStream.on("end", function(){
-        localStorage.main = $template.value;
         $markdown.textContent += md;
         $html.innerHTML = marked(md);
     })
+
+    var data = fs.readFileSync("../test/fixture/class.json", "utf8");
     mdStream.end(data);
 }

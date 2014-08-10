@@ -4,22 +4,28 @@ var dmd = require("dmd");
 var f = require("function-tools");
 var partials = require("./partials.json");
 var marked = require("marked");
+var Editor = require("./components/editor/editor");
 
 var $ = document.querySelector.bind(document);
-var $template = $("#template");
 var $markdown = $("#markdown");
 var $html = $("#html");
 
-var data = "[\n  {\n    \"description\": \"this module exports a class constructor\",\n    \"kind\": \"module\",\n    \"name\": \"file-set\",\n    \"examples\": [\n      \"```js\\nvar FileSet = require(\\\"file-set\\\");\\n```\"\n    ],\n    \"longname\": \"module:file-set\"\n  },\n  {\n    \"description\": \"Takes a list of path patterns\",\n    \"kind\": \"class\",\n    \"classdesc\": \"this class returns a set of files\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"Array.<string>\"\n          ]\n        },\n        \"description\": \"a list of file patterns\"\n      }\n    ],\n    \"alias\": \"module:file-set\",\n    \"examples\": [\n      \"```js\\nvar cowFiles = new FileSet(\\\"cow/*\\\");\\n```\"\n    ],\n    \"name\": \"module:file-set\",\n    \"longname\": \"module:file-set\",\n    \"codeName\": \"FileSet\"\n  },\n  {\n    \"description\": \"the prototype {@link http://zombo.com|instance} property\",\n    \"name\": \"files\",\n    \"longname\": \"module:file-set#files\",\n    \"kind\": \"member\",\n    \"memberof\": \"module:file-set\",\n    \"scope\": \"instance\",\n    \"codeName\": \"FileSet.prototype.files\"\n  },\n  {\n    \"description\": \"A prototype instance methy meth\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"array\"\n          ]\n        },\n        \"description\": \"the paths to delete\",\n        \"name\": \"paths\"\n      }\n    ],\n    \"name\": \"delete\",\n    \"longname\": \"module:file-set#delete\",\n    \"kind\": \"function\",\n    \"memberof\": \"module:file-set\",\n    \"scope\": \"instance\",\n    \"codeName\": \"FileSet.prototype.delete\"\n  }\n]\n";
-$template.value = localStorage.main || "{{>main}}";
-refreshMarkdown();
+var editor = new Editor($("#template"), {
+    workspace: Object.keys(partials).map(function(key){
+        return {
+            name: key,
+            content: partials[key],
+            default: key === "authors"
+        };
+    })
+});
 
-var throttled = f.throttle(refreshMarkdown, { restPeriod: 500 });
-$template.addEventListener("input", throttled);
+editor.on("input", refreshMarkdown);
+refreshMarkdown();
 
 function refreshMarkdown(){
     $markdown.textContent = "";
-    var template = $template.value;
+    var template = editor.value;
     var md = "";
     
     var mdStream = dmd({ partials: partials, template: template });
@@ -31,15 +37,47 @@ function refreshMarkdown(){
         if (chunk) md += chunk.toString();
     });
     mdStream.on("end", function(){
-        localStorage.main = $template.value;
         $markdown.textContent += md;
         $html.innerHTML = marked(md);
     })
+
+    var data = "[\n  {\n    \"description\": \"this module exports a class constructor\",\n    \"kind\": \"module\",\n    \"name\": \"file-set\",\n    \"examples\": [\n      \"```js\\nvar FileSet = require(\\\"file-set\\\");\\n```\"\n    ],\n    \"longname\": \"module:file-set\"\n  },\n  {\n    \"description\": \"Takes a list of path patterns\",\n    \"kind\": \"class\",\n    \"classdesc\": \"this class returns a set of files\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"Array.<string>\"\n          ]\n        },\n        \"description\": \"a list of file patterns\"\n      }\n    ],\n    \"alias\": \"module:file-set\",\n    \"examples\": [\n      \"```js\\nvar cowFiles = new FileSet(\\\"cow/*\\\");\\n```\"\n    ],\n    \"name\": \"module:file-set\",\n    \"longname\": \"module:file-set\",\n    \"codeName\": \"FileSet\"\n  },\n  {\n    \"description\": \"the prototype {@link http://zombo.com|instance} property\",\n    \"name\": \"files\",\n    \"longname\": \"module:file-set#files\",\n    \"kind\": \"member\",\n    \"memberof\": \"module:file-set\",\n    \"scope\": \"instance\",\n    \"codeName\": \"FileSet.prototype.files\"\n  },\n  {\n    \"description\": \"A prototype instance methy meth\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"array\"\n          ]\n        },\n        \"description\": \"the paths to delete\",\n        \"name\": \"paths\"\n      }\n    ],\n    \"name\": \"delete\",\n    \"longname\": \"module:file-set#delete\",\n    \"kind\": \"function\",\n    \"memberof\": \"module:file-set\",\n    \"scope\": \"instance\",\n    \"codeName\": \"FileSet.prototype.delete\"\n  }\n]\n";
     mdStream.end(data);
 }
 
-},{"./partials.json":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json","dmd":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/lib/dmd.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","marked":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/marked/lib/marked.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports={
+},{"./components/editor/editor":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/editor/editor.js","./partials.json":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json","dmd":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/lib/dmd.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","marked":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/marked/lib/marked.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/editor/editor.js":[function(require,module,exports){
+var EventEmitter = require("events").EventEmitter;
+var a = require("array-tools");
+var f = require("function-tools");
+var util = require("util");
+
+var $ = document.querySelector.bind(document);
+
+module.exports = Editor;
+
+function Editor(el, options){
+    var self = this;
+    var defaultFile = a.findWhere(options.workspace, { default: true })
+    el.value = localStorage.editor || defaultFile.content;
+    this.file =  defaultFile || {
+        name: "empty",
+        content: "clive"
+    };
+    
+    Object.defineProperty(this, "value", { enumerable: true, get: function(){
+        return el.value;
+    }});
+    
+    var throttled = f.throttle(function(){
+        localStorage.editor = el.value;
+        self.emit("input", self.file);
+    }, { restPeriod: 500 });
+    el.addEventListener("input", throttled);
+};
+util.inherits(Editor, EventEmitter);
+
+},{"array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js","events":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/events/events.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","util":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/util/util.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json":[function(require,module,exports){
+module.exports={
   "documentation": "{{#identifiers~}}\n  {{#each this~}}\n    {{>identifier~}}\n  {{/each~}}\n{{/identifiers}}",
   "access": "{{#if access}}**Access**: {{{access}}}  \n{{/if~}}",
   "augments": "{{#if augments}}**Extends**: `{{{join augments \", \"}}}`  \n{{/if}}",
@@ -91,6 +129,678 @@ module.exports=module.exports=module.exports=module.exports=module.exports={
   "param": "{{#if (regexp-test name \"\\w+\\.\\w+\")}}  {{/if}}- {{>param-name}} {{{join (linkTo type.names style=\"code\") \" | \"}}}{{#if description}} - {{{linkify description}}}{{/if}}  \n",
   "properties": "{{#if properties}}{{#each properties}}{{>member}}{{/each}}{{/if~}}",
   "typedef": "{{>head~}}\n{{>body~}}"
+}
+},{}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js":[function(require,module,exports){
+"use strict";
+var t = require("typical"),
+    o = require("object-tools");
+
+/**
+Useful functions for working with arrays
+@module
+@alias a
+@example
+```js
+var a = require("array-tools");
+```
+*/
+exports.pluck = pluck;
+exports.pick = pick;
+exports.commonSequence = commonSequence;
+exports.arrayify = arrayify;
+exports.exists = exists;
+exports.without = without;
+exports.union = union;
+exports.where = where;
+exports.findWhere = findWhere;
+exports.unique = unique;
+exports.spliceWhile = spliceWhile;
+exports.extract = extract;
+
+/** 
+Plucks the value of the specified property from each object in the input array
+@param arrayOfObjects {Object[]} - the input array of objects
+@param property {...string} - the property(s) to pluck
+@returns {Array} 
+@example
+```js
+> var data = [
+...     {one: 1, two: 2},
+...     {two: "two"},
+...     {one: "one", two: "zwei"},
+... ];
+undefined
+> a.pluck(data, "one");
+[ 1, 'one' ]
+> a.pluck(data, "two");
+[ 2, 'two', 'zwei' ]
+> a.pluck(data, "one", "two");
+[ 1, 'two', 'one' ]
+```
+@alias module:array-tools.pluck
+*/
+function pluck(arrayOfObjects, property, property2, property3){
+    if (!Array.isArray(arrayOfObjects)) throw new Error(".pluck() input must be an array");
+    
+    return arrayOfObjects
+        .filter(function(obj){
+            var one = eval("obj." + property);
+            var two = eval("obj." + property2);
+            var three = eval("obj." + property3);
+            return one || two || three;
+        })
+        .map(function(obj){
+            var one = eval("obj." + property);
+            var two = eval("obj." + property2);
+            var three = eval("obj." + property3);
+            return one || two || three;
+        });
+}
+
+/**
+return a copy of the input `arrayOfObjects` containing objects having only the cherry-picked properties
+@param arrayOfObjects {object[]} - the input
+@param property {...string} - the properties to include in the result
+@return {object[]}
+@example
+```js
+> data = [
+    { one: "un", two: "deux", three: "trois" },
+    { two: "two", one: "one" },
+    { four: "quattro" },
+    { two: "zwei" }
+]
+> a.pick(data, "two")
+[ { two: 'deux' },
+  { two: 'two' },
+  { two: 'zwei' } ]
+```
+@alias module:array-tools.pick
+*/
+function pick(){
+    var args = arrayify(arguments);
+    var arrayOfObjects = args.shift();
+    var properties = args;
+    
+    if (!Array.isArray(arrayOfObjects)) throw new Error(".pick() input must be an array");
+    
+    return arrayOfObjects
+        .filter(function(obj){
+            return properties.some(function(prop){
+                return obj[prop] !== undefined;
+            });
+        })
+        .map(function(obj){
+            var output = {};
+            properties.forEach(function(prop){
+                if (obj[prop] !== undefined){
+                    output[prop] = obj[prop];
+                }
+            });
+            return output;
+        });
+}
+
+/**
+Takes input and guarantees an array back. Result can be one of three things:
+
+- puts a single scalar in an array
+- converts array-like object (e.g. `arguments`) to a real array
+- converts `null` or `undefined` to an empty array
+
+@param input {*} - the input value to convert to an array
+@returns {Array}
+@example
+```js
+> a.arrayify(null)
+[]
+> a.arrayify(0)
+[ 0 ]
+> a.arrayify([ 1, 2 ])
+[ 1, 2 ]
+> function f(){ return a.arrayify(arguments); }
+undefined
+> f(1,2,3)
+[ 1, 2, 3 ]
+```
+@alias module:array-tools.arrayify
+*/
+function arrayify(input){
+    if (input === null || input === undefined){
+        return [];
+    } else if (t.isPlainObject(input) && input.length >= 0 && input.length === Math.floor(input.length)){
+        return Array.prototype.slice.call(input);
+    } else {
+        return Array.isArray(input) ? input : [ input ];
+    }
+}
+
+/**
+returns true if a value, or nested object value exists in an array
+@param {Array} - the array to search
+@param {*} - the value to search for 
+@returns {boolean}
+@example
+```js
+> a.exists([ 1, 2, 3 ], 2)
+true
+> a.exists([ { result: false }, { result: false } ], { result: true })
+false
+> a.exists([ { result: true }, { result: false } ], { result: true })
+true
+> a.exists([ { result: true }, { result: true } ], { result: true })
+true
+```
+@alias module:array-tools.exists
+*/
+function exists(array, value){
+    if (t.isPlainObject(value)){
+        var query = value,
+            found = false,
+            index = 0,
+            item;
+
+        while(!found && (item = array[index++])){
+            found = o.exists(item, query);
+        }
+        return found;
+    } else {
+        return array.indexOf(value) > -1;
+    }
+}
+
+/**
+returns an array containing items from `arrayOfObjects` where key/value pairs 
+from `query` are matched identically
+@param {Array} - the array to search
+@param {query} - an object containing the key/value pairs you want to match
+@returns {Array}
+@example
+```js
+> dudes = [{ name: "Jim", age: 8}, { name: "Clive", age: 8}, { name: "Hater", age: 9}]
+[ { name: 'Jim', age: 8 },
+  { name: 'Clive', age: 8 },
+  { name: 'Hater', age: 9 } ]
+> a.where(dudes, { age: 8})
+[ { name: 'Jim', age: 8 },
+  { name: 'Clive', age: 8 } ]
+```
+@alias module:array-tools.where
+*/
+function where(arrayOfObjects, query){
+    return arrayify(arrayOfObjects).filter(function(item){
+        return o.exists(item, query);
+    });
+}
+
+/**
+returns the first item from `arrayOfObjects` where key/value pairs 
+from `query` are matched identically
+@param {Array} - the array to search
+@param {query} - an object containing the key/value pairs you want to match
+@returns {Object}
+@example
+```js
+> dudes = [{ name: "Jim", age: 8}, { name: "Clive", age: 8}, { name: "Hater", age: 9}]
+[ { name: 'Jim', age: 8 },
+  { name: 'Clive', age: 8 },
+  { name: 'Hater', age: 9 } ]
+> a.findWhere(dudes, { age: 8})
+{ name: 'Jim', age: 8 }
+```
+@alias module:array-tools.findWhere
+*/
+function findWhere(arrayOfObjects, query){
+    var result = where(arrayOfObjects, query);
+    return result.length ? result[0] : null;
+}
+
+
+/**
+Returns the input minus the specified values.
+@param {Array} - the input array
+@param {*} - a single, or array of values to omit
+@returns {Array}
+@example
+```js
+> a.without([ 1, 2, 3 ], 2)
+[ 1, 3 ]
+> a.without([ 1, 2, 3 ], [ 2, 3 ])
+[ 1 ]
+```
+@alias module:array-tools.without
+*/
+function without(input, toRemove){
+    toRemove = arrayify(toRemove);
+    return input.filter(function(item){
+        return !exists(toRemove, item);
+    });
+}
+
+/**
+merge two arrays into a single array of unique values
+@param {Array} - First array
+@param {Array} - Second array
+@param {string} - the unique ID property name
+@returns {Array}
+@example
+```js
+> var array1 = [ 1, 2 ], array2 = [ 2, 3 ];
+undefined
+> a.union(array1, array2)
+[ 1, 2, 3 ]
+> var array1 = [ { id: 1 }, { id: 2 } ], array2 = [ { id: 2 }, { id: 3 } ];
+undefined
+> a.union(array1, array2)
+[ { id: 1 }, { id: 2 }, { id: 3 } ]
+> var array2 = [ { id: 2, blah: true }, { id: 3 } ]
+undefined
+> a.union(array1, array2)
+[ { id: 1 },
+  { id: 2 },
+  { id: 2, blah: true },
+  { id: 3 } ]
+> a.union(array1, array2, "id")
+[ { id: 1 }, { id: 2 }, { id: 3 } ]
+```
+@alias module:array-tools.union
+*/
+function union(array1, array2, idKey){
+    var result = o.clone(array1);
+    array2.forEach(function(item){
+        if (idKey){
+            var query = {};
+            query[idKey] = item[idKey];
+            if (!findWhere(result, query)){
+                result.push(item);
+            }
+        } else if (!exists(result, item)){
+            result.push(item);
+        };
+    });
+    return result;
+}
+
+/**
+Returns the initial elements which both input arrays have in common
+@param {Array} - first array to compare
+@param {Array} - second array to compare
+@returns {Array}
+@example
+```js
+> a.commonSequence([1,2,3], [1,2,4])
+[ 1, 2 ]
+```
+@alias module:array-tools.commonSequence
+*/
+function commonSequence(a, b){
+    var result = [];
+    for (var i = 0; i < Math.min(a.length, b.length); i++){
+        if (a[i] === b[i]){
+            result.push(a[i]);
+        }
+    }
+    return result;
+}
+
+/**
+reduces an array to unique values
+@param {Array} - input array
+@returns {Array}
+@example
+```js
+> n = [1,6,6,7,1]
+[ 1, 6, 6, 7, 1 ]
+> a.unique(n)
+[ 1, 6, 7 ]
+```
+@alias module:array-tools.unique
+*/
+function unique(array){
+    return array.reduce(function(prev, curr){
+        if (prev.indexOf(curr) === -1) prev.push(curr);
+        return prev;
+    }, []);
+}
+
+/**
+splice from `index` until `test` fails
+@param {Array} - the input array
+@param {number} - the position to begin splicing from 
+@param {RegExp} - the test to continue splicing while true
+@param ...elementN {*} - the elements to add to the array
+@returns {Array}
+@example
+```js
+> letters = ["a", "a", "b"]
+[ 'a', 'a', 'b' ]
+> a.spliceWhile(letters, 0, /a/, "x")
+[ 'a', 'a' ]
+> letters
+[ 'x', 'b' ]
+```
+@alias module:array-tools.spliceWhile
+*/
+function spliceWhile(array, index, test){
+    for (var i = 0; i < array.length; i++){
+        if (!test.test(array[i])) break;
+    }
+    var spliceArgs = [ index, i ];
+    spliceArgs = spliceArgs.concat(arrayify(arguments).slice(3));
+    return array.splice.apply(array, spliceArgs);
+}
+
+/**
+Removes items from `array` which satisfy the query. Modifies the input array, returns the extracted.
+@param {Array} - the input array, modified directly
+@param {function | object} - Per item in the array, if either the function returns truthy or the exists query is satisfied, the item is extracted
+@returns {Array} the extracted items.
+@alias module:array-tools.extract
+*/
+function extract(array, query){
+    var result = [];
+    var toSplice = [];
+    array.forEach(function(item, index){
+        if (t.isPlainObject(query)){
+            if(o.exists(item, query)){
+                result.push(item);
+                toSplice.push(index);
+            }
+        } else {
+            if (query(item)){
+                result.push(item);
+                toSplice.push(index);
+            }
+        }
+    });
+    for (var i = 0; i < toSplice.length; i++){
+        array.splice(toSplice[i] - i, 1);
+    }
+    return result;
+}
+
+},{"object-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/node_modules/object-tools/lib/object-tools.js","typical":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/node_modules/typical/lib/typical.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/node_modules/object-tools/lib/object-tools.js":[function(require,module,exports){
+"use strict";
+var a = require("array-tools"),
+    t = require("typical");
+
+/**
+Useful functions for working with objects
+@module
+@alias o
+@example
+```js
+var o = require("object-tools");
+```
+*/
+
+exports.extend = extend;
+exports.clone = clone;
+exports.defined = defined;
+exports.every = every;
+exports.each = each;
+exports.omit = omit;
+exports.exists = exists;
+exports.without = without;
+
+/**
+Merge a list of objects, left to right, into one. 
+@param {...Object} object - a sequence of Object instances to be extended
+@returns {Object}
+@example
+```js
+> o.extend({ one: 1, three: 3 }, { one: "one", two: 2 }, { four: 4 });
+{ one: 'one',
+  three: 3,
+  two: 2,
+  four: 4 }
+```
+*/
+function extend(){
+    var args = a.arrayify(arguments);
+    return args.reduce(function(prev, curr){
+        if (typeof curr !== "object") return prev;
+        for (var prop in curr){
+            prev[prop] = curr[prop];
+        }
+        return prev;
+    }, {});
+}
+
+/**
+Clones an object or array
+@param {Object|Array} input - the input to clone
+@returns {Object|Array}
+@example
+```js
+> date = new Date()
+Fri May 09 2014 13:54:34 GMT+0200 (CEST)
+> o.clone(date)
+{}  // a Date instance doesn't own any properties
+> date.clive = "hater"
+'hater'
+> o.clone(date)
+{ clive: 'hater' }
+> array = [1,2,3]
+[ 1, 2, 3 ]
+> newArray = o.clone(array)
+[ 1, 2, 3 ]
+> array === newArray
+false
+```
+*/
+function clone(input){
+    var output;
+    if (t.isPlainObject(input)){
+        output = {};
+        for (var prop in input){
+            output[prop] = input[prop];
+        }
+        return output;
+    } else if (Array.isArray(input)){
+        output = [];
+        input.forEach(function(item){
+            output.push(item);
+        });
+        return output;
+    }
+}
+
+/**
+Returns a clone of the input object, minus the specified properties
+@param {Object} - the object to clone
+@param {string[]} - an array of property names to omit from the clone
+@returns {Object}
+@example
+```js
+> o.omit({ one: 1, two: 2, three: 3, four: 4 }, [ "two", "four" ]);
+{ one: 1, three: 3 }
+```
+*/
+function omit(object, toOmit){
+    toOmit = a.arrayify(toOmit);
+    var output = clone(object);
+    toOmit.forEach(function(omit){
+        delete output[omit];
+    });
+    return output;
+}
+
+/**
+Returns true if the supplied iterator function returns true for every property in the object
+@param {Object} - the object to inspect
+@param {Function} - the iterator function to run against each key/value pair, the args are `(value, key)`.
+@returns {Boolean}
+@example
+```js
+> function aboveTen(input){ return input > 10; }
+undefined
+> o.every({ eggs: 12, carrots: 30, peas: 100 }, aboveTen)
+true
+> o.every({ eggs: 6, carrots: 30, peas: 100 }, aboveTen)
+false
+```
+*/
+function every(object, iterator){
+    var result = true;
+    for (var prop in object){
+        result = result && iterator(object[prop], prop);
+    }
+    return result;
+}
+
+/**
+Runs the iterator function against every key/value pair in the input object
+@param {Object} - the object to iterate
+@param {Function} - the iterator function to run against each key/value pair, the args are `(value, key)`.
+@example
+```js
+> var total = 0;
+undefined
+> function addToTotal(n){ total += n; }
+undefined
+> o.each({ eggs: 3, celery: 2, carrots: 1 }, addToTotal)
+undefined
+> total
+6
+```
+*/
+function each(object, callback){
+    for (var prop in object){
+        callback(object[prop], prop);
+    }
+}
+
+/**
+returns true if the key/value pairs in `query` also exist identically in `object`.
+Also supports RegExp values in `query`. If the `query` property begins with `!` then test is negated. 
+@param {Object} - the object to examine
+@param {Object} - the key/value pairs to look for
+@returns {boolean}
+@example
+```js
+> o.exists({ a: 1, b: 2}, {a: 0})
+false
+> o.exists({ a: 1, b: 2}, {a: 1})
+true
+> o.exists({ a: 1, b: 2}, {"!a": 1})
+false
+> o.exists({ name: "clive hater" }, { name: /clive/ })
+true
+> o.exists({ name: "clive hater" }, { "!name": /ian/ })
+true
+```
+*/
+function exists(object, query){
+    var found = true, queryValue, objectValue;
+    for (var prop in query){
+        var negated = prop[0] === "!";
+        var queryValue = query[prop];
+        var objectValue = negated ? object[prop.slice(1)] : object[prop];
+        if (queryValue instanceof RegExp){
+            found = negated 
+                ? !queryValue.test(objectValue)
+                : queryValue.test(objectValue);
+        } else {
+            found = negated 
+                ? queryValue !== objectValue
+                : queryValue === objectValue;
+        }
+        if (!found) break;
+    }
+    return found;
+}
+
+/**
+returns a clone of the object minus the specified properties. 
+@param {Object} - the input object
+@param {string|string[]} - a single property, or array of properties to omit
+@returns {Object}
+@example
+```js
+> o.without({ a: 1, b: 2, c: 3}, "b")
+{ a: 1, c: 3 }
+> o.without({ a: 1, b: 2, c: 3}, ["b", "a"])
+{ c: 3 }
+```
+*/
+function without(object, toRemove){
+    toRemove = a.arrayify(toRemove);
+	var output = clone(object);
+	toRemove.forEach(function(remove){
+		delete output[remove];
+	});
+	return output;
+}
+
+function defined(object){
+    var output = {};
+    for (var prop in object){
+        if (object[prop] !== undefined) output[prop] = object[prop];
+    }
+    return output;
+}
+
+},{"array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js","typical":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/node_modules/typical/lib/typical.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/node_modules/typical/lib/typical.js":[function(require,module,exports){
+"use strict";
+
+/**
+For type-checking Javascript values.
+@module
+@alias t
+@example
+```js
+var t = require("typical");
+```
+*/
+
+exports.isNumber = isNumber;
+exports.isPlainObject = isPlainObject;
+
+/**
+Returns true if input is a number
+@param {*} - the input to test
+@returns {boolean}
+@example
+```js
+> w.isNumber(0)
+true
+> w.isNumber(1)
+true
+> w.isNumber(1.1)
+true
+> w.isNumber(0xff)
+true
+> w.isNumber(0644)
+true
+> w.isNumber(6.2e5)
+true
+> w.isNumber(NaN)
+false
+> w.isNumber(Infinity)
+false
+```
+*/
+function isNumber(n){
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+/**
+Returns true if input type is `object` and not an Array
+@param {*} - the input to test
+@returns {boolean}
+@example
+```js
+> w.isPlainObject(new Date())
+true
+> w.isPlainObject({ clive: "hater" })
+true
+> w.isPlainObject([ 0, 1 ])
+false
+```
+*/
+function isPlainObject(input){
+    return typeof input === "object" && !Array.isArray(input);
 }
 },{}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/helpers/alias-name.js":[function(require,module,exports){
 var a = require("array-tools");
@@ -4135,6 +4845,13 @@ minimatch.braceExpand = function (pattern, options) {
 }
 
 Minimatch.prototype.braceExpand = braceExpand
+
+function pad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
 function braceExpand (pattern, options) {
   options = options || this.options
   pattern = typeof pattern === "undefined"
@@ -4207,13 +4924,18 @@ function braceExpand (pattern, options) {
     this.debug("numset", numset[1], numset[2])
     var suf = braceExpand.call(this, pattern.substr(numset[0].length), options)
       , start = +numset[1]
+      , needPadding = numset[1][0] === '0'
+      , startWidth = numset[1].length
+      , padded
       , end = +numset[2]
       , inc = start > end ? -1 : 1
       , set = []
+
     for (var i = start; i != (end + inc); i += inc) {
+      padded = needPadding ? pad(i, startWidth) : i + ''
       // append all the suffixes
       for (var ii = 0, ll = suf.length; ii < ll; ii ++) {
-        set.push(i + suf[ii])
+        set.push(padded + suf[ii])
       }
     }
     return set
@@ -17927,6 +18649,13 @@ minimatch.braceExpand = function (pattern, options) {
 }
 
 Minimatch.prototype.braceExpand = braceExpand
+
+function pad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
 function braceExpand (pattern, options) {
   options = options || this.options
   pattern = typeof pattern === "undefined"
@@ -17999,13 +18728,18 @@ function braceExpand (pattern, options) {
     this.debug("numset", numset[1], numset[2])
     var suf = braceExpand.call(this, pattern.substr(numset[0].length), options)
       , start = +numset[1]
+      , needPadding = numset[1][0] === '0'
+      , startWidth = numset[1].length
+      , padded
       , end = +numset[2]
       , inc = start > end ? -1 : 1
       , set = []
+
     for (var i = start; i != (end + inc); i += inc) {
+      padded = needPadding ? pad(i, startWidth) : i + ''
       // append all the suffixes
       for (var ii = 0, ll = suf.length; ii < ll; ii ++) {
-        set.push(i + suf[ii])
+        set.push(padded + suf[ii])
       }
     }
     return set
@@ -21435,6 +22169,13 @@ minimatch.braceExpand = function (pattern, options) {
 }
 
 Minimatch.prototype.braceExpand = braceExpand
+
+function pad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
 function braceExpand (pattern, options) {
   options = options || this.options
   pattern = typeof pattern === "undefined"
@@ -21507,13 +22248,18 @@ function braceExpand (pattern, options) {
     this.debug("numset", numset[1], numset[2])
     var suf = braceExpand.call(this, pattern.substr(numset[0].length), options)
       , start = +numset[1]
+      , needPadding = numset[1][0] === '0'
+      , startWidth = numset[1].length
+      , padded
       , end = +numset[2]
       , inc = start > end ? -1 : 1
       , set = []
+
     for (var i = start; i != (end + inc); i += inc) {
+      padded = needPadding ? pad(i, startWidth) : i + ''
       // append all the suffixes
       for (var ii = 0, ll = suf.length; ii < ll; ii ++) {
-        set.push(i + suf[ii])
+        set.push(padded + suf[ii])
       }
     }
     return set
@@ -26474,6 +27220,7 @@ exports.copy = copy;
 exports.duplicate = duplicate;
 exports.read = read;
 exports.write = write;
+exports.writeStream = writeStream;
 exports.rmdir = rmdir;
 exports.mkdir = mkdir;
 exports.preserveDates = preserveDates;
@@ -26599,6 +27346,11 @@ function write(filename, content){
     if (typeof content === "undefined") content = "";
     mkdir(path.dirname(filename));
     fs.writeFileSync(filename, content);
+}
+
+function writeStream(filename, options){
+    mkdir(path.dirname(filename));
+    return fs.createWriteStream(filename, options);
 }
 
 /**
@@ -28134,6 +28886,13 @@ minimatch.braceExpand = function (pattern, options) {
 }
 
 Minimatch.prototype.braceExpand = braceExpand
+
+function pad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
 function braceExpand (pattern, options) {
   options = options || this.options
   pattern = typeof pattern === "undefined"
@@ -28206,13 +28965,18 @@ function braceExpand (pattern, options) {
     this.debug("numset", numset[1], numset[2])
     var suf = braceExpand.call(this, pattern.substr(numset[0].length), options)
       , start = +numset[1]
+      , needPadding = numset[1][0] === '0'
+      , startWidth = numset[1].length
+      , padded
       , end = +numset[2]
       , inc = start > end ? -1 : 1
       , set = []
+
     for (var i = start; i != (end + inc); i += inc) {
+      padded = needPadding ? pad(i, startWidth) : i + ''
       // append all the suffixes
       for (var ii = 0, ll = suf.length; ii < ll; ii ++) {
-        set.push(i + suf[ii])
+        set.push(padded + suf[ii])
       }
     }
     return set
@@ -29474,396 +30238,7 @@ function defined(object){
     return output;
 }
 
-},{"array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/node_modules/boil-js/node_modules/object-tools/node_modules/array-tools/lib/array-tools.js","typical":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/node_modules/boil-js/node_modules/object-tools/node_modules/typical/lib/typical.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/node_modules/boil-js/node_modules/object-tools/node_modules/array-tools/lib/array-tools.js":[function(require,module,exports){
-"use strict";
-var t = require("typical"),
-    o = require("object-tools");
-
-/**
-Useful functions for working with arrays
-@module
-@alias a
-@example
-```js
-var a = require("array-tools");
-```
-*/
-exports.pluck = pluck;
-exports.pick = pick;
-exports.commonSequence = commonSequence;
-exports.arrayify = arrayify;
-exports.exists = exists;
-exports.without = without;
-exports.union = union;
-exports.where = where;
-exports.findWhere = findWhere;
-exports.unique = unique;
-exports.spliceWhile = spliceWhile;
-exports.extract = extract;
-
-/** 
-Plucks the value of the specified property from each object in the input array
-@param arrayOfObjects {Object[]} - the input array of objects
-@param property {...string} - the property(s) to pluck
-@returns {Array} 
-@example
-```js
-> var data = [
-...     {one: 1, two: 2},
-...     {two: "two"},
-...     {one: "one", two: "zwei"},
-... ];
-undefined
-> a.pluck(data, "one");
-[ 1, 'one' ]
-> a.pluck(data, "two");
-[ 2, 'two', 'zwei' ]
-> a.pluck(data, "one", "two");
-[ 1, 'two', 'one' ]
-```
-@alias module:array-tools.pluck
-*/
-function pluck(arrayOfObjects, property, property2, property3){
-    if (!Array.isArray(arrayOfObjects)) throw new Error(".pluck() input must be an array");
-    
-    return arrayOfObjects
-        .filter(function(obj){
-            var one = eval("obj." + property);
-            var two = eval("obj." + property2);
-            var three = eval("obj." + property3);
-            return one || two || three;
-        })
-        .map(function(obj){
-            var one = eval("obj." + property);
-            var two = eval("obj." + property2);
-            var three = eval("obj." + property3);
-            return one || two || three;
-        });
-}
-
-/**
-return a copy of the input `arrayOfObjects` containing objects having only the cherry-picked properties
-@param arrayOfObjects {object[]} - the input
-@param property {...string} - the properties to include in the result
-@return {object[]}
-@example
-```js
-> data = [
-    { one: "un", two: "deux", three: "trois" },
-    { two: "two", one: "one" },
-    { four: "quattro" },
-    { two: "zwei" }
-]
-> a.pick(data, "two")
-[ { two: 'deux' },
-  { two: 'two' },
-  { two: 'zwei' } ]
-```
-@alias module:array-tools.pick
-*/
-function pick(){
-    var args = arrayify(arguments);
-    var arrayOfObjects = args.shift();
-    var properties = args;
-    
-    if (!Array.isArray(arrayOfObjects)) throw new Error(".pick() input must be an array");
-    
-    return arrayOfObjects
-        .filter(function(obj){
-            return properties.some(function(prop){
-                return obj[prop] !== undefined;
-            });
-        })
-        .map(function(obj){
-            var output = {};
-            properties.forEach(function(prop){
-                if (obj[prop] !== undefined){
-                    output[prop] = obj[prop];
-                }
-            });
-            return output;
-        });
-}
-
-/**
-Takes input and guarantees an array back. Result can be one of three things:
-
-- puts a single scalar in an array
-- converts array-like object (e.g. `arguments`) to a real array
-- converts `null` or `undefined` to an empty array
-
-@param input {*} - the input value to convert to an array
-@returns {Array}
-@example
-```js
-> a.arrayify(null)
-[]
-> a.arrayify(0)
-[ 0 ]
-> a.arrayify([ 1, 2 ])
-[ 1, 2 ]
-> function f(){ return a.arrayify(arguments); }
-undefined
-> f(1,2,3)
-[ 1, 2, 3 ]
-```
-@alias module:array-tools.arrayify
-*/
-function arrayify(input){
-    if (input === null || input === undefined){
-        return [];
-    } else if (t.isPlainObject(input) && input.length >= 0 && input.length === Math.floor(input.length)){
-        return Array.prototype.slice.call(input);
-    } else {
-        return Array.isArray(input) ? input : [ input ];
-    }
-}
-
-/**
-returns true if a value, or nested object value exists in an array
-@param {Array} - the array to search
-@param {*} - the value to search for 
-@returns {boolean}
-@example
-```js
-> a.exists([ 1, 2, 3 ], 2)
-true
-> a.exists([ { result: false }, { result: false } ], { result: true })
-false
-> a.exists([ { result: true }, { result: false } ], { result: true })
-true
-> a.exists([ { result: true }, { result: true } ], { result: true })
-true
-```
-@alias module:array-tools.exists
-*/
-function exists(array, value){
-    if (t.isPlainObject(value)){
-        var query = value,
-            found = false,
-            index = 0,
-            item;
-
-        while(!found && (item = array[index++])){
-            found = o.exists(item, query);
-        }
-        return found;
-    } else {
-        return array.indexOf(value) > -1;
-    }
-}
-
-/**
-returns an array containing items from `arrayOfObjects` where key/value pairs 
-from `query` are matched identically
-@param {Array} - the array to search
-@param {query} - an object containing the key/value pairs you want to match
-@returns {Array}
-@example
-```js
-> dudes = [{ name: "Jim", age: 8}, { name: "Clive", age: 8}, { name: "Hater", age: 9}]
-[ { name: 'Jim', age: 8 },
-  { name: 'Clive', age: 8 },
-  { name: 'Hater', age: 9 } ]
-> a.where(dudes, { age: 8})
-[ { name: 'Jim', age: 8 },
-  { name: 'Clive', age: 8 } ]
-```
-@alias module:array-tools.where
-*/
-function where(arrayOfObjects, query){
-    return arrayify(arrayOfObjects).filter(function(item){
-        return o.exists(item, query);
-    });
-}
-
-/**
-returns the first item from `arrayOfObjects` where key/value pairs 
-from `query` are matched identically
-@param {Array} - the array to search
-@param {query} - an object containing the key/value pairs you want to match
-@returns {Object}
-@example
-```js
-> dudes = [{ name: "Jim", age: 8}, { name: "Clive", age: 8}, { name: "Hater", age: 9}]
-[ { name: 'Jim', age: 8 },
-  { name: 'Clive', age: 8 },
-  { name: 'Hater', age: 9 } ]
-> a.findWhere(dudes, { age: 8})
-{ name: 'Jim', age: 8 }
-```
-@alias module:array-tools.findWhere
-*/
-function findWhere(arrayOfObjects, query){
-    var result = where(arrayOfObjects, query);
-    return result.length ? result[0] : null;
-}
-
-
-/**
-Returns the input minus the specified values.
-@param {Array} - the input array
-@param {*} - a single, or array of values to omit
-@returns {Array}
-@example
-```js
-> a.without([ 1, 2, 3 ], 2)
-[ 1, 3 ]
-> a.without([ 1, 2, 3 ], [ 2, 3 ])
-[ 1 ]
-```
-@alias module:array-tools.without
-*/
-function without(input, toRemove){
-    toRemove = arrayify(toRemove);
-    return input.filter(function(item){
-        return !exists(toRemove, item);
-    });
-}
-
-/**
-merge two arrays into a single array of unique values
-@param {Array} - First array
-@param {Array} - Second array
-@param {string} - the unique ID property name
-@returns {Array}
-@example
-```js
-> var array1 = [ 1, 2 ], array2 = [ 2, 3 ];
-undefined
-> a.union(array1, array2)
-[ 1, 2, 3 ]
-> var array1 = [ { id: 1 }, { id: 2 } ], array2 = [ { id: 2 }, { id: 3 } ];
-undefined
-> a.union(array1, array2)
-[ { id: 1 }, { id: 2 }, { id: 3 } ]
-> var array2 = [ { id: 2, blah: true }, { id: 3 } ]
-undefined
-> a.union(array1, array2)
-[ { id: 1 },
-  { id: 2 },
-  { id: 2, blah: true },
-  { id: 3 } ]
-> a.union(array1, array2, "id")
-[ { id: 1 }, { id: 2 }, { id: 3 } ]
-```
-@alias module:array-tools.union
-*/
-function union(array1, array2, idKey){
-    var result = o.clone(array1);
-    array2.forEach(function(item){
-        if (idKey){
-            var query = {};
-            query[idKey] = item[idKey];
-            if (!findWhere(result, query)){
-                result.push(item);
-            }
-        } else if (!exists(result, item)){
-            result.push(item);
-        };
-    });
-    return result;
-}
-
-/**
-Returns the initial elements which both input arrays have in common
-@param {Array} - first array to compare
-@param {Array} - second array to compare
-@returns {Array}
-@example
-```js
-> a.commonSequence([1,2,3], [1,2,4])
-[ 1, 2 ]
-```
-@alias module:array-tools.commonSequence
-*/
-function commonSequence(a, b){
-    var result = [];
-    for (var i = 0; i < Math.min(a.length, b.length); i++){
-        if (a[i] === b[i]){
-            result.push(a[i]);
-        }
-    }
-    return result;
-}
-
-/**
-reduces an array to unique values
-@param {Array} - input array
-@returns {Array}
-@example
-```js
-> n = [1,6,6,7,1]
-[ 1, 6, 6, 7, 1 ]
-> a.unique(n)
-[ 1, 6, 7 ]
-```
-@alias module:array-tools.unique
-*/
-function unique(array){
-    return array.reduce(function(prev, curr){
-        if (prev.indexOf(curr) === -1) prev.push(curr);
-        return prev;
-    }, []);
-}
-
-/**
-splice from `index` until `test` fails
-@param {Array} - the input array
-@param {number} - the position to begin splicing from 
-@param {RegExp} - the test to continue splicing while true
-@param ...elementN {*} - the elements to add to the array
-@returns {Array}
-@example
-```js
-> letters = ["a", "a", "b"]
-[ 'a', 'a', 'b' ]
-> a.spliceWhile(letters, 0, /a/, "x")
-[ 'a', 'a' ]
-> letters
-[ 'x', 'b' ]
-```
-@alias module:array-tools.spliceWhile
-*/
-function spliceWhile(array, index, test){
-    for (var i = 0; i < array.length; i++){
-        if (!test.test(array[i])) break;
-    }
-    var spliceArgs = [ index, i ];
-    spliceArgs = spliceArgs.concat(arrayify(arguments).slice(3));
-    return array.splice.apply(array, spliceArgs);
-}
-
-/**
-Removes items from `array` which satisfy the query. Modifies the input array, returns the extracted.
-@param {Array} - the input array, modified directly
-@param {function | object} - Per item in the array, if either the function returns truthy or the exists query is satisfied, the item is extracted
-@returns {Array} the extracted items.
-@alias module:array-tools.extract
-*/
-function extract(array, query){
-    var result = [];
-    var toSplice = [];
-    array.forEach(function(item, index){
-        if (t.isPlainObject(query)){
-            if(o.exists(item, query)){
-                result.push(item);
-                toSplice.push(index);
-            }
-        } else {
-            if (query(item)){
-                result.push(item);
-                toSplice.push(index);
-            }
-        }
-    });
-    for (var i = 0; i < toSplice.length; i++){
-        array.splice(toSplice[i] - i, 1);
-    }
-    return result;
-}
-
-},{"object-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/node_modules/boil-js/node_modules/object-tools/lib/object-tools.js","typical":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/node_modules/boil-js/node_modules/object-tools/node_modules/typical/lib/typical.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/node_modules/boil-js/node_modules/object-tools/node_modules/typical/lib/typical.js":[function(require,module,exports){
+},{"array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/node_modules/boil-js/node_modules/array-tools/lib/array-tools.js","typical":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/node_modules/boil-js/node_modules/object-tools/node_modules/typical/lib/typical.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/node_modules/boil-js/node_modules/object-tools/node_modules/typical/lib/typical.js":[function(require,module,exports){
 "use strict";
 
 /**
@@ -34256,7 +34631,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 },{}],"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/constants-browserify/constants.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports={
   "O_RDONLY": 0,
   "O_WRONLY": 1,
   "O_RDWR": 2,

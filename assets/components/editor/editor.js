@@ -16,6 +16,10 @@ function Editor(el, options){
         content: "clive"
     };
     
+    Object.defineProperty(this, "value", { enumerable: true, get: function(){
+        return el.value;
+    }});
+    
     var throttled = f.throttle(function(){
         localStorage.editor = el.value;
         self.emit("input", self.file);
