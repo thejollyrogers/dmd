@@ -5,47 +5,54 @@ var f = require("function-tools");
 var partials = require("./partials.json");
 var marked = require("marked");
 var Editor = require("./components/editor/editor");
+var a = require("array-tools");
 
 var $ = document.querySelector.bind(document);
 var $markdown = $("#markdown");
 var $html = $("#html");
 
-var editor = new Editor($("#template"), {
-    workspace: Object.keys(partials).map(function(key){
-        return {
-            name: key,
-            content: partials[key],
-            default: key === "authors"
-        };
-    })
+var workspace = Object.keys(partials).map(function(key){
+    return {
+        name: key,
+        content: partials[key]
+    };
 });
+workspace.push({
+    name: "_template",
+    content: "{{>main}}",
+    default: true
+});
+var editor = new Editor($("#template"), { workspace: workspace });
 
-editor.on("input", refreshMarkdown);
+editor.on("input", function(data){
+    partials[data.name] = data.content;
+    refreshMarkdown();
+});
 refreshMarkdown();
 
 function refreshMarkdown(){
     $markdown.textContent = "";
-    var template = editor.value;
+    var template = a.findWhere(editor.workspace, { name: "_template"}).content;
     var md = "";
-    
-    var mdStream = dmd({ partials: partials, template: template });
-    mdStream.on("error", function(err){
-        // console.log("SHIT FAILED");
-    });
-    mdStream.on("readable", function(){
-        var chunk = this.read();
-        if (chunk) md += chunk.toString();
-    });
-    mdStream.on("end", function(){
-        $markdown.textContent += md;
-        $html.innerHTML = marked(md);
-    })
 
     var data = "[\n  {\n    \"description\": \"this module exports a class constructor\",\n    \"kind\": \"module\",\n    \"name\": \"file-set\",\n    \"examples\": [\n      \"```js\\nvar FileSet = require(\\\"file-set\\\");\\n```\"\n    ],\n    \"longname\": \"module:file-set\"\n  },\n  {\n    \"description\": \"Takes a list of path patterns\",\n    \"kind\": \"class\",\n    \"classdesc\": \"this class returns a set of files\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"Array.<string>\"\n          ]\n        },\n        \"description\": \"a list of file patterns\"\n      }\n    ],\n    \"alias\": \"module:file-set\",\n    \"examples\": [\n      \"```js\\nvar cowFiles = new FileSet(\\\"cow/*\\\");\\n```\"\n    ],\n    \"name\": \"module:file-set\",\n    \"longname\": \"module:file-set\",\n    \"codeName\": \"FileSet\"\n  },\n  {\n    \"description\": \"the prototype {@link http://zombo.com|instance} property\",\n    \"name\": \"files\",\n    \"longname\": \"module:file-set#files\",\n    \"kind\": \"member\",\n    \"memberof\": \"module:file-set\",\n    \"scope\": \"instance\",\n    \"codeName\": \"FileSet.prototype.files\"\n  },\n  {\n    \"description\": \"A prototype instance methy meth\",\n    \"params\": [\n      {\n        \"type\": {\n          \"names\": [\n            \"array\"\n          ]\n        },\n        \"description\": \"the paths to delete\",\n        \"name\": \"paths\"\n      }\n    ],\n    \"name\": \"delete\",\n    \"longname\": \"module:file-set#delete\",\n    \"kind\": \"function\",\n    \"memberof\": \"module:file-set\",\n    \"scope\": \"instance\",\n    \"codeName\": \"FileSet.prototype.delete\"\n  }\n]\n";
-    mdStream.end(data);
+    
+    dmd({ partials: partials, template: template })
+        .on("error", function(err){
+            // console.log("SHIT FAILED");
+        })
+        .on("readable", function(){
+            var chunk = this.read();
+            if (chunk) md += chunk.toString();
+        })
+        .on("end", function(){
+            $markdown.textContent += md;
+            $html.innerHTML = marked(md);
+        })
+        .end(data);
 }
 
-},{"./components/editor/editor":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/editor/editor.js","./partials.json":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json","dmd":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/lib/dmd.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","marked":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/marked/lib/marked.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/editor/editor.js":[function(require,module,exports){
+},{"./components/editor/editor":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/editor/editor.js","./partials.json":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json","array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js","dmd":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/lib/dmd.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","marked":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/marked/lib/marked.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/editor/editor.js":[function(require,module,exports){
 var EventEmitter = require("events").EventEmitter;
 var a = require("array-tools");
 var f = require("function-tools");
@@ -57,38 +64,47 @@ module.exports = Editor;
 
 function Editor(el, options){
     var self = this;
-    var defaultFile = a.findWhere(options.workspace, { default: true })
-    el.value = localStorage.editor || defaultFile.content;
-    this.file =  defaultFile || {
-        name: "empty",
-        content: "clive"
-    };
-    
+    this.workspace = options.workspace;
+    this.el = el;
     Object.defineProperty(this, "value", { enumerable: true, get: function(){
         return el.value;
     }});
-    
-    var throttled = f.throttle(function(){
-        localStorage.editor = el.value;
+
+    var defaultFile = a.findWhere(this.workspace, { default: true });
+    var saved = localStorage.file ? JSON.parse(localStorage.file) : null;
+    this.setFile(saved || defaultFile);
+
+    el.addEventListener("input", f.throttle(function(){
+        self.file.content = el.value;
+        self.save();
         self.emit("input", self.file);
-    }, { restPeriod: 500 });
-    el.addEventListener("input", throttled);
-    
+    }, { restPeriod: 500 }));
+
     var select = $(".files");
-    options.workspace.forEach(function(file){
+    this.workspace.forEach(function(file){
         var option = document.createElement("option");
         option.value = file.name;
         option.textContent = file.name;
         select.appendChild(option);
     });
     select.addEventListener("change", function(){
-        el.value = a.findWhere(options.workspace, { name: this.value }).content;
+        self.setFile(a.findWhere(self.workspace, { name: this.value }));
     });
 };
 util.inherits(Editor, EventEmitter);
 
+Editor.prototype.setFile = function(file){
+    this.file = file;
+    this.el.value = this.file.content;
+    this.save();
+    this.emit("input", this.file);
+};
+Editor.prototype.save = function(){
+    localStorage.file = JSON.stringify(this.file);
+};
+
 },{"array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js","events":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/events/events.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","util":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/util/util.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
   "documentation": "{{#identifiers~}}\n  {{#each this~}}\n    {{>identifier~}}\n  {{/each~}}\n{{/identifiers}}",
   "access": "{{#if access}}**Access**: {{{access}}}  \n{{/if~}}",
   "augments": "{{#if augments}}**Extends**: `{{{join augments \", \"}}}`  \n{{/if}}",
@@ -34642,7 +34658,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 },{}],"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/constants-browserify/constants.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
   "O_RDONLY": 0,
   "O_WRONLY": 1,
   "O_RDWR": 2,

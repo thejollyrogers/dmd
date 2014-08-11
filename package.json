@@ -4,7 +4,8 @@
   "description": "Demo site for dmd",
   "main": "index.js",
   "scripts": {
-    "sass": "baldrick --do 'sassc assets/style.scss assets/style.css -m' --when assets/style.scss --change"
+    "sass": "baldrick --do 'sassc assets/style.scss assets/style.css -m' --when assets/style.scss --change",
+    "br": "watchify assets/app.js -o assets/bundle.js -v -t brfs"
   },
   "repository": "https://github.com/75lb/dmd.git",
   "homepage": "https://github.com/75lb/dmd",
