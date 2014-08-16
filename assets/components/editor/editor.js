@@ -30,6 +30,7 @@ function Editor(el, options){
         var option = document.createElement("option");
         option.value = file.name;
         option.textContent = file.name;
+        option.selected = file.name === self.file.name;
         select.appendChild(option);
     });
     select.addEventListener("change", function(){
@@ -44,6 +45,15 @@ Editor.prototype.setFile = function(file){
     this.save();
     this.emit("input", this.file);
 };
+Editor.prototype.open = function(file){
+    this.file = file;
+    this.el.value = this.file.content;
+    this.emit("opened", this.file);
+};
 Editor.prototype.save = function(){
-    localStorage.file = JSON.stringify(this.file);
+    file.save();
+};
+Editor.prototype.close = function(){
+    this.file = null;
+    this.el.value = "";
 };

@@ -30,11 +30,10 @@ editor.on("input", function(data){
 refreshMarkdown();
 
 function refreshMarkdown(){
-    $markdown.textContent = "";
     var template = a.findWhere(editor.workspace, { name: "_template"}).content;
     var md = "";
 
-    var data = fs.readFileSync("../test/fixture/class.json", "utf8");
+    var data = fs.readFileSync("../test/fixture/globals.json", "utf8");
     
     dmd({ partials: partials, template: template })
         .on("error", function(err){
@@ -45,7 +44,7 @@ function refreshMarkdown(){
             if (chunk) md += chunk.toString();
         })
         .on("end", function(){
-            $markdown.textContent += md;
+            $markdown.textContent = md;
             $html.innerHTML = marked(md);
         })
         .end(data);
