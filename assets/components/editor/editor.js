@@ -7,10 +7,10 @@ var $ = document.querySelector.bind(document);
 
 module.exports = Editor;
 
-function Editor(el, options){
+function Editor(selector, options){
     var self = this;
     this.workspace = options.workspace;
-    this.el = el;
+    this.el = $(selector);
     Object.defineProperty(this, "value", { enumerable: true, get: function(){
         return el.value;
     }});

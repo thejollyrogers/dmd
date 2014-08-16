@@ -1,0 +1,4 @@
+{
+    "default": "{{>main}}",
+    "another": "#Clive\n"
+}

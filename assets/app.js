@@ -2,26 +2,22 @@ var dmd = require("dmd");
 var fs = require("fs");
 var f = require("function-tools");
 var partials = require("./partials.json");
+var templates = require("./templates.json");
 var marked = require("marked");
 var Editor = require("./components/editor/editor");
 var a = require("array-tools");
+var Workspace = require("./components/workspace");
+var File = require("./components/file");
 
 var $ = document.querySelector.bind(document);
 var $markdown = $("#markdown");
 var $html = $("#html");
 
-var workspace = Object.keys(partials).map(function(key){
-    return {
-        name: key,
-        content: partials[key]
-    };
-});
-workspace.push({
-    name: "_template",
-    content: "{{>main}}",
-    default: true
-});
-var editor = new Editor($("#template"), { workspace: workspace });
+var partialFiles = new Workspace(partials);
+var templateFiles = new Workspace(templates);
+
+var editor = new Editor("#template");
+editor.open(templateFiles.get("default"));
 
 editor.on("input", function(data){
     partials[data.name] = data.content;
