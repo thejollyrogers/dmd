@@ -4,6 +4,7 @@ var File = require("./file");
 module.exports = Workspace;
 
 function Workspace(partials){
+    this.files = [];
     this.load(partials);
 }
 Workspace.prototype.load = function(data){
@@ -15,7 +16,8 @@ Workspace.prototype.load = function(data){
 };
 Workspace.prototype.add = function(file){
     this.files.push(file);
+    return this;
 };
 Workspace.prototype.get = function(name){
-    a.findWhere(this.files, { name: name });
+    return a.findWhere(this.files, { name: name });
 };

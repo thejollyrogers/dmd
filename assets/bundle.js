@@ -2,33 +2,50 @@
 var dmd = require("dmd");
 
 var f = require("function-tools");
-var partials = require("./partials.json");
+var a = require("array-tools");
 var marked = require("marked");
 var Editor = require("./components/editor/editor");
-var a = require("array-tools");
+var Workspace = require("./model/workspace");
+var File = require("./model/file");
+var select = require("./components/select/select");
+var partials = require("./partials.json");
+var templates = require("./templates.json");
 
 var $ = document.querySelector.bind(document);
 var $markdown = $("#markdown");
 var $html = $("#html");
 
-var workspace = Object.keys(partials).map(function(key){
-    return {
-        name: key,
-        content: partials[key]
-    };
-});
-workspace.push({
-    name: "_template",
-    content: "{{>main}}",
-    default: true
-});
-var editor = new Editor($("#template"), { workspace: workspace });
+var partialWorkspace = new Workspace(partials);
+var templateWorkspace = new Workspace(templates);
 
-editor.on("input", function(data){
-    partials[data.name] = data.content;
-    refreshMarkdown();
+var editor = Editor("#template")
+    .open(templateWorkspace.get("default"))
+    .on("input", function(data){
+        // partials[data.name] = data.content;
+        // refreshMarkdown();
+    });
+
+select("[data-select=partials]", partialWorkspace.files.map(function(file){
+    return {
+        value: file.name,
+        text: file.name,
+        selected: false
+    }
+})).on("change", function(newValue){
+    editor.open(partialWorkspace.get(newValue));
 });
-refreshMarkdown();
+
+select("[data-select=templates]", templateWorkspace.files.map(function(file){
+    return {
+        value: file.name,
+        text: file.name,
+        selected: false
+    }
+})).on("change", function(newValue){
+    editor.open(templateWorkspace.get(newValue));
+});
+
+// refreshMarkdown();
 
 function refreshMarkdown(){
     var template = a.findWhere(editor.workspace, { name: "_template"}).content;
@@ -51,7 +68,7 @@ function refreshMarkdown(){
         .end(data);
 }
 
-},{"./components/editor/editor":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/editor/editor.js","./partials.json":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json","array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js","dmd":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/lib/dmd.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","marked":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/marked/lib/marked.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/editor/editor.js":[function(require,module,exports){
+},{"./components/editor/editor":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/editor/editor.js","./components/select/select":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/select/select.js","./model/file":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/model/file.js","./model/workspace":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/model/workspace.js","./partials.json":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json","./templates.json":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/templates.json","array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js","dmd":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/dmd/lib/dmd.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","marked":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/marked/lib/marked.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/editor/editor.js":[function(require,module,exports){
 var EventEmitter = require("events").EventEmitter;
 var a = require("array-tools");
 var f = require("function-tools");
@@ -61,50 +78,109 @@ var $ = document.querySelector.bind(document);
 
 module.exports = Editor;
 
-function Editor(el, options){
+function Editor(selector, options){
+    if (!(this instanceof Editor)) return new Editor(selector, options);
+    
     var self = this;
-    this.workspace = options.workspace;
-    this.el = el;
+    this.el = $(selector);
     Object.defineProperty(this, "value", { enumerable: true, get: function(){
         return el.value;
     }});
 
-    var defaultFile = a.findWhere(this.workspace, { default: true });
-    var saved = localStorage.file ? JSON.parse(localStorage.file) : null;
-    this.setFile(saved || defaultFile);
-
-    el.addEventListener("input", f.throttle(function(){
+    this.el.addEventListener("input", f.throttle(function(){
         self.file.content = el.value;
         self.save();
         self.emit("input", self.file);
     }, { restPeriod: 500 }));
-
-    var select = $(".files");
-    this.workspace.forEach(function(file){
-        var option = document.createElement("option");
-        option.value = file.name;
-        option.textContent = file.name;
-        option.selected = file.name === self.file.name;
-        select.appendChild(option);
-    });
-    select.addEventListener("change", function(){
-        self.setFile(a.findWhere(self.workspace, { name: this.value }));
-    });
 };
 util.inherits(Editor, EventEmitter);
 
-Editor.prototype.setFile = function(file){
+Editor.prototype.open = function(file){
     this.file = file;
     this.el.value = this.file.content;
-    this.save();
-    this.emit("input", this.file);
+    this.emit("opened", this.file);
+    return this;
 };
 Editor.prototype.save = function(){
-    localStorage.file = JSON.stringify(this.file);
+    file.save();
+    return this;
+};
+Editor.prototype.close = function(){
+    this.file = null;
+    this.el.value = "";
+    return this;
 };
 
-},{"array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js","events":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/events/events.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","util":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/util/util.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json":[function(require,module,exports){
-module.exports={
+},{"array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js","events":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/events/events.js","function-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/function-tools/lib/function-tools.js","util":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/util/util.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/components/select/select.js":[function(require,module,exports){
+var EventEmitter = require("events").EventEmitter;
+var util = require("util");
+
+module.exports = Select;
+
+var $ = document.querySelector.bind(document);
+
+function Select(selector, items){
+    if (!(this instanceof Select)) return new Select(selector, items);
+    var self = this;
+
+    this.el = $(selector);
+    this.el.addEventListener("change", function(){
+        self.emit("change", this.value);
+    });
+    this.load(items);
+}
+util.inherits(Select, EventEmitter);
+
+Select.prototype.load = function(items){
+    var self = this;
+    items.forEach(function(item){
+        var opt = document.createElement("option");
+        opt.value = item.value;
+        opt.textContent = item.text;
+        opt.selected = item.selected;
+        self.el.appendChild(opt);
+    });
+};
+
+},{"events":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/events/events.js","util":"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/util/util.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/model/file.js":[function(require,module,exports){
+module.exports = File;
+
+function File(name, content, options){
+    this.name = name;
+    this.content = content;
+    this.dirty = false;
+}
+File.prototype.save = function(){
+    localStorage[this.name] = this.content;
+};
+
+},{}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/model/workspace.js":[function(require,module,exports){
+var a = require("array-tools");
+var File = require("./file");
+
+module.exports = Workspace;
+
+function Workspace(partials){
+    this.files = [];
+    this.load(partials);
+}
+Workspace.prototype.load = function(data){
+    if (data){
+        this.files = Object.keys(data).map(function(key){
+            return new File(key, data[key]);
+        });
+    }
+};
+Workspace.prototype.add = function(file){
+    this.files.push(file);
+    return this;
+};
+Workspace.prototype.get = function(name){
+    return a.findWhere(this.files, { name: name });
+};
+
+},{"./file":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/model/file.js","array-tools":"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js"}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/partials.json":[function(require,module,exports){
+module.exports=module.exports={
   "documentation": "{{#identifiers~}}\n  {{#each this~}}\n    {{>identifier~}}\n  {{/each~}}\n{{/identifiers}}",
   "access": "{{#if access}}**Access**: {{{access}}}  \n{{/if~}}",
   "augments": "{{#if augments}}**Extends**: `{{{join augments \", \"}}}`  \n{{/if}}",
@@ -157,6 +233,12 @@ module.exports={
   "properties": "{{#if properties}}{{#each properties}}{{>member}}{{/each}}{{/if~}}",
   "typedef": "{{>head~}}\n{{>body~}}"
 }
+},{}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/assets/templates.json":[function(require,module,exports){
+module.exports=module.exports={
+    "default": "{{>main}} yeah?",
+    "another": "#Clive\n"
+}
+
 },{}],"/Users/Lloyd/Documents/75lb/dmd/_gh-pages/node_modules/array-tools/lib/array-tools.js":[function(require,module,exports){
 "use strict";
 var t = require("typical"),
@@ -34660,7 +34742,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 },{}],"/usr/local/lib/node_modules/watchify/node_modules/browserify/node_modules/constants-browserify/constants.json":[function(require,module,exports){
-module.exports={
+module.exports=module.exports={
   "O_RDONLY": 0,
   "O_WRONLY": 1,
   "O_RDWR": 2,

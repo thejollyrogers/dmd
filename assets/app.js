@@ -1,29 +1,50 @@
 var dmd = require("dmd");
 var fs = require("fs");
 var f = require("function-tools");
-var partials = require("./partials.json");
-var templates = require("./templates.json");
+var a = require("array-tools");
 var marked = require("marked");
 var Editor = require("./components/editor/editor");
-var a = require("array-tools");
-var Workspace = require("./components/workspace");
-var File = require("./components/file");
+var Workspace = require("./model/workspace");
+var File = require("./model/file");
+var select = require("./components/select/select");
+var partials = require("./partials.json");
+var templates = require("./templates.json");
 
 var $ = document.querySelector.bind(document);
 var $markdown = $("#markdown");
 var $html = $("#html");
 
-var partialFiles = new Workspace(partials);
-var templateFiles = new Workspace(templates);
+var partialWorkspace = new Workspace(partials);
+var templateWorkspace = new Workspace(templates);
 
-var editor = new Editor("#template");
-editor.open(templateFiles.get("default"));
+var editor = Editor("#template")
+    .open(templateWorkspace.get("default"))
+    .on("input", function(data){
+        // partials[data.name] = data.content;
+        // refreshMarkdown();
+    });
 
-editor.on("input", function(data){
-    partials[data.name] = data.content;
-    refreshMarkdown();
+select("[data-select=partials]", partialWorkspace.files.map(function(file){
+    return {
+        value: file.name,
+        text: file.name,
+        selected: false
+    }
+})).on("change", function(newValue){
+    editor.open(partialWorkspace.get(newValue));
 });
-refreshMarkdown();
+
+select("[data-select=templates]", templateWorkspace.files.map(function(file){
+    return {
+        value: file.name,
+        text: file.name,
+        selected: false
+    }
+})).on("change", function(newValue){
+    editor.open(templateWorkspace.get(newValue));
+});
+
+// refreshMarkdown();
 
 function refreshMarkdown(){
     var template = a.findWhere(editor.workspace, { name: "_template"}).content;
