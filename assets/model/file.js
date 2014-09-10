@@ -1,10 +1,11 @@
 module.exports = File;
 
-function File(name, content, options){
-    this.name = name;
-    this.content = content;
+function File(options){
+    this.name = options.name;
+    this.content = options.content;
+    this.type = options.type;
     this.dirty = false;
 }
 File.prototype.save = function(){
-    localStorage[this.name] = this.content;
+    localStorage[this.type + "." + this.name] = this.content;
 };

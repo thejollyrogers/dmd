@@ -17,7 +17,7 @@ function Editor(selector, options){
     }});
 
     this.el.addEventListener("input", f.throttle(function(){
-        self.file.content = el.value;
+        self.file.content = self.el.value;
         self.save();
         self.emit("input", self.file);
     }, { restPeriod: 500 }));
@@ -25,13 +25,15 @@ function Editor(selector, options){
 util.inherits(Editor, EventEmitter);
 
 Editor.prototype.open = function(file){
-    this.file = file;
-    this.el.value = this.file.content;
-    this.emit("opened", this.file);
+    if (file){
+        this.file = file;
+        this.el.value = this.file.content;
+        this.emit("opened", this.file);
+    }
     return this;
 };
 Editor.prototype.save = function(){
-    file.save();
+    this.file.save();
     return this;
 };
 Editor.prototype.close = function(){

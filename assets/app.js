@@ -1,61 +1,69 @@
+"use strict";
 var dmd = require("dmd");
 var fs = require("fs");
 var f = require("function-tools");
 var a = require("array-tools");
 var marked = require("marked");
 var Editor = require("./components/editor/editor");
-var Workspace = require("./model/workspace");
+var Files = require("./model/files");
 var File = require("./model/file");
 var select = require("./components/select/select");
 var partials = require("./partials.json");
 var templates = require("./templates.json");
+var store = require("./model/store");
 
 var $ = document.querySelector.bind(document);
 var $markdown = $("#markdown");
 var $html = $("#html");
 
-var partialWorkspace = new Workspace(partials);
-var templateWorkspace = new Workspace(templates);
+var partialFiles = new Files({ type: "partial" });
+partialFiles.load(partials);
+partialFiles.load(store.get("partial"));
+window.p = partialFiles;
+
+var templateFiles = new Files({ type: "template" });
+templateFiles.load(templates);
+templateFiles.load(store.get("template"));
+window.t = templateFiles;
 
 var editor = Editor("#template")
-    .open(templateWorkspace.get("default"))
-    .on("input", function(data){
-        // partials[data.name] = data.content;
-        // refreshMarkdown();
+    .open(templateFiles.get("default"))
+    .on("input", function(file){
+        refreshMarkdown();
     });
 
-select("[data-select=partials]", partialWorkspace.files.map(function(file){
+select("[data-select=partials]", partialFiles.files.map(function(file){
     return {
         value: file.name,
         text: file.name,
         selected: false
     }
 })).on("change", function(newValue){
-    editor.open(partialWorkspace.get(newValue));
+    editor.open(partialFiles.get(newValue));
+    refreshMarkdown();
 });
 
-select("[data-select=templates]", templateWorkspace.files.map(function(file){
+var templateSelect = select("[data-select=templates]", templateFiles.files.map(function(file){
     return {
         value: file.name,
         text: file.name,
         selected: false
     }
 })).on("change", function(newValue){
-    editor.open(templateWorkspace.get(newValue));
+    editor.open(templateFiles.get(newValue));
+    refreshMarkdown();
 });
 
-// refreshMarkdown();
+refreshMarkdown();
 
 function refreshMarkdown(){
-    var template = a.findWhere(editor.workspace, { name: "_template"}).content;
+    var template = templateFiles.get(templateSelect.selected.value).content;
     var md = "";
 
     var data = fs.readFileSync("../test/fixture/globals.json", "utf8");
-    
-    dmd({ partials: partials, template: template })
-        .on("error", function(err){
-            // console.log("SHIT FAILED");
-        })
+
+    dmd({ partials: partialFiles.toObject(), template: template })
+        .on("error", console.log)
         .on("readable", function(){
             var chunk = this.read();
             if (chunk) md += chunk.toString();

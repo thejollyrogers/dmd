@@ -12,10 +12,10 @@
   "dependencies": {
     "array-tools": "^1.3.0",
     "brfs": "^1.2.0",
-    "dmd": "^0.2.7",
-    "file-set": "^0.2.1",
-    "function-tools": "^0.1.1",
-    "marked": "^0.3.2"
+    "dmd": "~0.2.7",
+    "file-set": "~0.2.1",
+    "function-tools": "~0.1.1",
+    "marked": "~0.3.2"
   },
   "local-web-server": {
     "port": 8070

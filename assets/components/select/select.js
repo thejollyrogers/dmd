@@ -1,5 +1,6 @@
 var EventEmitter = require("events").EventEmitter;
 var util = require("util");
+var a = require("array-tools");
 
 module.exports = Select;
 
@@ -10,7 +11,10 @@ function Select(selector, items){
     var self = this;
 
     this.el = $(selector);
+    this.items = items;
+    this.selected = self.items[0];
     this.el.addEventListener("change", function(){
+        self.selected = a.findWhere(self.items, { value: this.value });
         self.emit("change", this.value);
     });
     this.load(items);
